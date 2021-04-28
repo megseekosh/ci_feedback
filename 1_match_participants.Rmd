@@ -1,0 +1,172 @@
+---
+title: "match_participants"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages('Matching')
+library('Matching')
+library('dplyr')
+library('tidyverse')
+```
+
+```{r, read in data}
+data <- read.csv('~/Google Drive/CI_feedback/data/match_participants/to_make_age_match.csv')
+```
+
+# hearing age
+```{r, make hearing age matches}
+ha_data <- data %>% 
+  #filter(Hearing_age!='NA') %>% # remove child we don't have HA for
+  filter(tp !='2') %>% # filter out the kids w/o GFFTA
+  filter(Hearing_age > 11) # remove kids w/ less than a year of hearing experience
+
+attach(ha_data)
+
+# to set the caliper amounts below
+#sd(Hearing_age)
+#sd(Mat_ed)
+
+vars <- ha_data %>%
+  select(Hearing_age, Mat_ed, Gender) %>%
+  data.matrix(.)
+
+
+output <- Match(Y=NULL, # we don't have the outcome measures yet
+                Cimplant, # control and treatment groups
+                vars, # matrix of variables to match on
+                M = 1, # one-to-one matching
+                exact = c(FALSE, FALSE, TRUE), # exact matching only for gender
+                caliper = c(.4, 1, 0), # .4 sds flexibility for hearing age (~3 mos); 1 sd flexibility for mat ed
+                replace=FALSE, # don't match multiple CI kids to diff controls
+                ties=TRUE, 
+                Weight = 1)
+               # restrict=rbind(c(4,29,-1))) # restrict rows 4 and 29 from matching to avoid one NH from being matched twice
+
+summary(output)
+# started with 28 kids w/ CIs
+# we don't have the hearing age for one - RMVD
+# two have super low hearing ages (7 and 8 mos) - RMVD but we will use them for chrono matches
+
+```
+
+```{r, join case-control table to original dataframe}
+#  first, number rows of original dataframe 
+ha_data$row_number <- as.numeric(rownames(ha_data))
+
+#create case-control table
+output <- data.frame(output$index.treated, output$index.control) # our case-control table
+colnames(output) <- c("CI", "NH")
+
+output_final <- output %>%
+  gather("hearing_status", "row_number", CI, NH) %>%
+  merge(., ha_data, by='row_number')
+
+# sanity check
+to_check <- output_final %>%
+  group_by(hearing_status) %>%
+  summarize(ha_mean = mean(Hearing_age),
+            mat_ed_mean = mean(Mat_ed))
+```
+
+
+# chrono age matches
+```{r, make chrono age matches}
+chrono_data <- data %>% 
+  filter(tp !='2') # filter out the kids w/o gfta
+
+attach(chrono_data)
+
+vars <- chrono_data %>%
+  select(Chrono_age, Mat_ed, Gender) %>%
+  data.matrix(.)
+
+
+chrono_output <- Match(Y=NULL, # we don't have the outcome measures yet
+                Cimplant, # control and treatment groups
+                vars, # matrix of variables to match on
+                M = 1, # one-to-one matching
+                exact = c(FALSE, FALSE, TRUE), # exact matching only for gender
+                caliper = c(.4, 1, 0), # .4 sds flexibility for hearing age (~3 mos); 1 sd flexibility for mat ed
+                replace=FALSE, # don't match multiple CI kids to diff controls
+                ties=TRUE, 
+                Weight = 1,
+                restrict=rbind(c(12,41,-1),c(25,160,-1), c(27,185-1), c(27,183,-1), c(28,80,-1), c(28,41,-1), c(12,80,-1)))
+
+#
+                #rbind(c(4,20,-1),c(6,55,-1))
+
+summary(chrono_output)
+
+# unable to match one child (44 mos) since we removed tp2 so I will match them by hand
+```
+
+
+# everything together now
+```{r, join case-control chrono age table to original dataframe}
+#  first, number rows of original dataframe 
+chrono_data$row_number <- as.numeric(rownames(chrono_data))
+
+#create case-control table
+chrono_output <- data.frame(chrono_output$index.treated, chrono_output$index.control) # our case-control table
+colnames(chrono_output) <- c("CI", "NH")
+
+chrono_output_final <- chrono_output %>%
+  gather("hearing_status", "row_number", CI, NH) %>%
+  merge(., chrono_data, by='row_number')
+
+# sanity check
+to_check <- chrono_output_final %>%
+  group_by(hearing_status) %>%
+  summarize(chrono_mean = mean(Chrono_age),
+            mat_ed_mean = mean(Mat_ed))
+```
+
+
+```{r, combine chrono and ha outputs}
+
+chrono_output_final$match <- plyr::mapvalues(chrono_output_final$hearing_status, from = "NH", to = "Chrono_age_match")
+output_final$match <- plyr::mapvalues(output_final$hearing_status, from = "NH", to = "HA_match")
+
+
+# #TODO
+final <- rbind(chrono_output_final, output_final) %>%
+  distinct_at(., vars(match, Participant_ID), .keep_all = T) # remove the CI kids who are in there twice (most of them)
+# REMINDER: still need to match the final chrono age child (44 months)
+
+# spit out final dataframe
+write.csv(final, 'matched_children.csv')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

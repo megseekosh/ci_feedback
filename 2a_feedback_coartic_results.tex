@@ -1,0 +1,2321 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={CI\_feedback\_coartic},
+  pdfauthor={Meg Cychosz},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{CI\_feedback\_coartic}
+\author{Meg Cychosz}
+\date{28 April 2021}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}dplyr\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}tidyr\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}stringr\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}purrr\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}lme4\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}lmerTest\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}stargazer\textquotesingle{}}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}kableExtra\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# acoustic measures}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/production\_data/RealWordRep\_809E64MS2.CI\_mel\_spectrum.csv"}\NormalTok{)}
+\NormalTok{demo\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/match\_participants/final\_matched\_children\_edited.csv"}\NormalTok{) }\CommentTok{\# hearing status info, etc.}
+
+\CommentTok{\# test data}
+\NormalTok{tp1\_test\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/tp1\_test\_data.csv"}\NormalTok{) }\CommentTok{\# GFTA, vocab, etc. for TP1}
+\NormalTok{tp3\_test\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/participantinfo\_tp3.csv"}\NormalTok{) }\CommentTok{\# GFTA, vocab, etc. for TP3}
+\NormalTok{some\_CI\_test\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/UW\_UMNCrossSectionalCochlearImplantV1DatesScores.csv"}\NormalTok{) }\CommentTok{\# vocab scores for CIs}
+\NormalTok{CI\_gfta\_min }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/ParticipantInfo\_CIV1.csv"}\NormalTok{) }\CommentTok{\#  GFTA scores and min pair scores for CIs}
+
+\CommentTok{\# LENA data}
+\NormalTok{tp1\_lena\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/TimePoint1\_LENA\_hourly.csv"}\NormalTok{) }\CommentTok{\# LENA for TP1; not collected at TP3}
+\NormalTok{CI\_lena\_data1 }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"/Users/megcychosz/Google Drive/CI\_feedback/data/testing\_data/CochlearV1\_hourly.csv"}\NormalTok{) }\CommentTok{\#LENA}
+
+\CommentTok{\# merge the test datasets together}
+\NormalTok{CI\_test\_data }\OtherTok{\textless{}{-}}\NormalTok{ CI\_gfta\_min }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(ResearchID, MinPair\_ProportionCorrect, GFTA\_Age,}
+\NormalTok{         GFTA\_RawCorrect, GFTA\_NumTranscribed, GFTA\_AdjCorrect, GFTA\_Standard) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., some\_CI\_test\_data, }\AttributeTok{by=}\StringTok{"ResearchID"}\NormalTok{)}
+
+\CommentTok{\# some cleaning }
+\NormalTok{data2 }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Filename}\SpecialCharTok{!=}\StringTok{\textquotesingle{}RealWordRep\_638L28MS1\_ML.WAV\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#remove 638 (HA match) because he repeated less than 50\% of the words}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Speaker=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{..*"}\NormalTok{,}\StringTok{""}\NormalTok{,Speaker), }\CommentTok{\# create speaker category}
+         \AttributeTok{Speaker=}\FunctionTok{gsub}\NormalTok{(}\StringTok{\textquotesingle{}\_[\^{}\_]*$\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, Speaker),}
+         \AttributeTok{CV\_dur=}\NormalTok{phone\_t1}\SpecialCharTok{+}\NormalTok{phone\_t2) }
+
+\CommentTok{\# merge with demographic and testing (GFTA/vocab) datasets}
+\NormalTok{tp3\_test\_data\_vars }\OtherTok{\textless{}{-}}\NormalTok{ tp3\_test\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(ParticipantIDLong, LateTalker, AAE, EVT\_Raw, EVT\_GSV, }
+\NormalTok{                                               EVT\_Standard, PPVT\_Raw, PPVT\_GSV, PPVT\_Standard, GFTA\_RawCorrect, }
+\NormalTok{                                               GFTA\_NumTranscribed, GFTA\_Standard, GFTA\_AdjCorrect, GFTA\_Age,}
+\NormalTok{                                               MinPair\_ProportionCorrect)}
+\NormalTok{CI\_test\_data\_vars }\OtherTok{\textless{}{-}}\NormalTok{ CI\_test\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(Speaker, LateTalker, AAE, EVT\_Raw, EVT\_Standard, EVT\_GSV, }
+\NormalTok{                                             PPVT\_GSV, PPVT\_Raw, PPVT\_Standard, GFTA\_RawCorrect, }
+\NormalTok{                                             GFTA\_NumTranscribed, GFTA\_AdjCorrect, GFTA\_Standard, GFTA\_Age,}
+\NormalTok{                                             MinPair\_ProportionCorrect)}
+
+\NormalTok{data3 }\OtherTok{\textless{}{-}}\NormalTok{ tp1\_test\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{MinPair\_ProportionCorrect =}\NormalTok{ MinPairT1) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(ParticipantIDLong, EVT\_Standard, }
+\NormalTok{         EVT\_Raw, EVT\_GSV, PPVT\_Standard, PPVT\_Raw, }
+\NormalTok{         PPVT\_GSV, LateTalker, AAE, }
+\NormalTok{         GFTA\_Age, GFTA\_Standard, GFTA\_NumTranscribed,}
+\NormalTok{         GFTA\_RawCorrect, GFTA\_AdjCorrect,}
+\NormalTok{         MinPair\_ProportionCorrect) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., tp3\_test\_data\_vars) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Speaker=}\NormalTok{ParticipantIDLong) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{ParticipantIDLong) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., CI\_test\_data\_vars) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., demo\_data, }\AttributeTok{by=}\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Speaker\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., data2, }\AttributeTok{by=}\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Speaker\textquotesingle{}}\NormalTok{))}
+
+\CommentTok{\# create a variable to note which children with CIs have which matches}
+\NormalTok{data4 }\OtherTok{\textless{}{-}}\NormalTok{ data3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{condition =} \FunctionTok{if\_else}\NormalTok{(Speaker}\SpecialCharTok{==}\StringTok{"300E57MS2"} \SpecialCharTok{|}\NormalTok{ Hearing\_age }\SpecialCharTok{\textless{}} \DecValTok{11}\NormalTok{, }\StringTok{"chrono\_only"}\NormalTok{,}
+                             \FunctionTok{if\_else}\NormalTok{(Speaker}\SpecialCharTok{==}\StringTok{"307E44MS1"}\NormalTok{, }\StringTok{"hearing\_age\_only"}\NormalTok{,}
+                                     \FunctionTok{ifelse}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}NH\textquotesingle{}}\NormalTok{, }\StringTok{"NH"}\NormalTok{,}
+                                     \StringTok{"hearing\_age\_chrono"}\NormalTok{)))) }\CommentTok{\# all other children with CIs are matched to both conditions}
+
+\CommentTok{\# how many children with NH are late talkers?}
+\CommentTok{\# one child contributed at tp1 and tp3, n=4}
+\NormalTok{late }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(LateTalker}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}}\NormalTok{) }
+
+\CommentTok{\# are the late talkers within normal EVT ranges?}
+\NormalTok{late\_vocab }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(LateTalker}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(EVT\_GSV, Speaker)}
+
+\CommentTok{\# are the late talkers within normal GFTA ranges?}
+\NormalTok{late\_gfta }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(LateTalker}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(GFTA\_Standard, Speaker)}
+
+\CommentTok{\# how many children are received the task in AAE?}
+\CommentTok{\# same child at tp1 and tp3, so n=1}
+\NormalTok{aae }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(AAE}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# recordings are excluded (or weren\textquotesingle{}t collected) from 14 total children from the kids w/ CIs and hearing age matches }
+\CommentTok{\# calculate hourly estimates }
+\NormalTok{lena\_hourly }\OtherTok{\textless{}{-}}\NormalTok{ tp1\_lena\_data }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# remember we don\textquotesingle{}t have LENA data for TP3}
+  \FunctionTok{rbind}\NormalTok{(., CI\_lena\_data1) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Subject) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{recording\_length\_hours=}\FunctionTok{sum}\NormalTok{(Duration)}\SpecialCharTok{/}\DecValTok{3600}\NormalTok{,}
+         \AttributeTok{AWC\_hourly =}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(AWC\_Actual)}\SpecialCharTok{/}\NormalTok{recording\_length\_hours),}
+         \AttributeTok{CVC\_hourly =}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(CVC\_Actual)}\SpecialCharTok{/}\NormalTok{recording\_length\_hours),}
+         \AttributeTok{CTC\_hourly =}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(CTC\_Actual)}\SpecialCharTok{/}\NormalTok{recording\_length\_hours)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Subject, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(AWC\_hourly, CVC\_hourly, CTC\_hourly, Subject, recording\_length\_hours) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}006L\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}026L\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}076L\textquotesingle{}} \SpecialCharTok{\&}
+\NormalTok{           Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}122L\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}655L\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Subject}\SpecialCharTok{!=}\StringTok{\textquotesingle{}657L\textquotesingle{}}\NormalTok{) }\CommentTok{\# remove the 6 hearing age matches that are from tp3; the lena data are from tp1 for them}
+
+\NormalTok{no\_lena }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ tp}\SpecialCharTok{==}\StringTok{\textquotesingle{}3\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Speaker }\SpecialCharTok{==}\StringTok{\textquotesingle{}800E65MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# get chrono matches,  the 6 hearing age matches that are from tp3, and the one CI child who didn\textquotesingle{}t do a recording }
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{AWC\_hourly=}\ConstantTok{NA}\NormalTok{,}
+         \AttributeTok{CVC\_hourly=}\ConstantTok{NA}\NormalTok{,}
+         \AttributeTok{CTC\_hourly=}\ConstantTok{NA}\NormalTok{,}
+         \AttributeTok{recording\_length\_hours=}\ConstantTok{NA}\NormalTok{,}
+         \AttributeTok{preSubject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"(L).*"}\NormalTok{,}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{,Speaker),}
+         \AttributeTok{Subject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"(A).*"}\NormalTok{,}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{,preSubject))}
+
+\NormalTok{data\_w\_lena }\OtherTok{\textless{}{-}}\NormalTok{ data4 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(tp}\SpecialCharTok{!=}\StringTok{\textquotesingle{}3\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(Speaker }\SpecialCharTok{!=}\StringTok{\textquotesingle{}800E65MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# don\textquotesingle{}t have LENA data from TP3, one CI child}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{preSubject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"(L).*"}\NormalTok{,}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{,Speaker),}
+         \AttributeTok{Subject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"E.*"}\NormalTok{,}\StringTok{""}\NormalTok{,preSubject)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., lena\_hourly, }\AttributeTok{by=}\StringTok{\textquotesingle{}Subject\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., no\_lena) }\CommentTok{\# recombine with tp3 data}
+
+\NormalTok{check }\OtherTok{\textless{}{-}}\NormalTok{ data\_w\_lena }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# sanity check: there should be 28 children w/ CIs, 27 chrono age matches, and 24 hearing age matches}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker, match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{count}\NormalTok{()}
+
+\CommentTok{\# write out stats; this dataset will remove all of the tp3 children, chrono age matches, children who didn\textquotesingle{}t complete a recording, and children who recorded after testing}
+\CommentTok{\# final lena dataset should include 20 children w/ CIs and 17 hearing age matches }
+\NormalTok{descrip\_lena\_stats }\OtherTok{\textless{}{-}}\NormalTok{ data\_w\_lena }\SpecialCharTok{\%\textgreater{}\%} 
+   \FunctionTok{filter}\NormalTok{(Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}665L52FS4\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}679L58MS6\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}802E72FS3\textquotesingle{}} \SpecialCharTok{\&} \CommentTok{\# remove children who recorded 3+ months after testing}
+\NormalTok{           Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}806E42MS1\textquotesingle{}}\SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}809E64MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker, match), }\AttributeTok{.keep\_all =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(recording\_length\_hours }\SpecialCharTok{!=} \StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{avg\_recording\_length=}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(recording\_length\_hours),}\DecValTok{2}\NormalTok{),}
+            \AttributeTok{sd\_recording\_length=}\FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(recording\_length\_hours),}\DecValTok{2}\NormalTok{),}
+            \AttributeTok{range\_recording\_length=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(recording\_length\_hours),}\DecValTok{2}\NormalTok{),}\StringTok{"{-}"}\NormalTok{,}\FunctionTok{max}\NormalTok{(recording\_length\_hours)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(descrip\_lena\_stats, }\AttributeTok{caption =} \StringTok{\textquotesingle{}LENA recording length stats\textquotesingle{}}\NormalTok{, }
+             \AttributeTok{booktabs=}\NormalTok{T,}
+             \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"match"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"sd"}\NormalTok{, }\StringTok{"range"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{kable\_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{(\#tab:descrip lena stats table)LENA recording length stats}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+match & mean & sd & range\\
+\midrule
+CI & 15.81 & 0.42 & 14.42 - 16\\
+HA\_match & 15.49 & 0.76 & 13.66 - 16\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# what were the ages of the children with NH (HA matches) who completed recordings? }
+\NormalTok{descrip\_nh\_lena\_stats }\OtherTok{\textless{}{-}}\NormalTok{ data\_w\_lena }\SpecialCharTok{\%\textgreater{}\%} 
+   \FunctionTok{filter}\NormalTok{(Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}665L52FS4\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}679L58MS6\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}802E72FS3\textquotesingle{}} \SpecialCharTok{\&} \CommentTok{\# remove children who recorded 3+ months after testing}
+\NormalTok{           Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}806E42MS1\textquotesingle{}}\SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}809E64MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker, match), }\AttributeTok{.keep\_all =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only ha matches}
+  \FunctionTok{filter}\NormalTok{(recording\_length\_hours }\SpecialCharTok{!=} \StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# remove ha matches we don\textquotesingle{}t have recordings from; sanity check there should be n=17 HA matches who completed recordings}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_age =} \FunctionTok{mean}\NormalTok{(Chrono\_age),}
+            \AttributeTok{sd\_age =} \FunctionTok{sd}\NormalTok{(Chrono\_age))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# write out data with demographics for vowel analysis}
+\FunctionTok{write.csv}\NormalTok{(data\_w\_lena, }\StringTok{\textquotesingle{}/Users/megcychosz/Google Drive/CI\_feedback/data/match\_participants/coartic\_w\_lena.csv\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data6 }\OtherTok{\textless{}{-}}\NormalTok{ data\_w\_lena }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{manner =} \FunctionTok{recode}\NormalTok{(Word,}\StringTok{"sad"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"chair"}\OtherTok{=}\StringTok{"affricate"}\NormalTok{,}\StringTok{"cheese"}\OtherTok{=}\StringTok{"affricate"}\NormalTok{,}
+                       \StringTok{"chicken"}\OtherTok{=}\StringTok{"affricate"}\NormalTok{,}\StringTok{"rabbit"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"rain"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                       \StringTok{"rainbow"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"raisins"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"reading"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                       \StringTok{"red"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"rock"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"rocking"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                       \StringTok{"running"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"sad"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sandbox"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                       \StringTok{"sandwich"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"scissors"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"share"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                       \StringTok{"sharing"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sheep"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"shell"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                       \StringTok{"ship"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"shoe"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"shoes"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                       \StringTok{"shorts"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"shoulder"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"shovel"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                             \StringTok{"shower"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sick"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sidewalk"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                             \StringTok{"sink"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sister"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"soap"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                             \StringTok{"sock"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"soup"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"suitcase"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}
+                             \StringTok{"sun"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"sunny"}\OtherTok{=}\StringTok{"fricative"}\NormalTok{,}\StringTok{"walk"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                             \StringTok{"washer"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"watch"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"water"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                        \StringTok{"web"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"wet"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"wheel"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}
+                             \StringTok{"wind"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{,}\StringTok{"window"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{, }\StringTok{"waiting"}\OtherTok{=}\StringTok{"approximant"}\NormalTok{),}
+         \AttributeTok{poa =} \FunctionTok{recode}\NormalTok{(Word, }\StringTok{"sad"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"chair"}\OtherTok{=}\StringTok{"alveopalatal"}\NormalTok{,}\StringTok{"cheese"}\OtherTok{=}\StringTok{"alveopalatal"}\NormalTok{,}
+                       \StringTok{"chicken"}\OtherTok{=}\StringTok{"alveopalatal"}\NormalTok{,}\StringTok{"rabbit"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"rain"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}
+                       \StringTok{"rainbow"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"raisins"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"reading"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}
+                       \StringTok{"red"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"rock"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"rocking"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}
+                       \StringTok{"running"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"sad"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"sandbox"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}
+                       \StringTok{"sandwich"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"scissors"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"share"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}
+                       \StringTok{"sharing"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"sheep"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"shell"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}
+                       \StringTok{"ship"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"shoe"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"shoes"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}
+                       \StringTok{"shorts"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"shoulder"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"shovel"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}
+                             \StringTok{"shower"}\OtherTok{=}\StringTok{"postalveolar"}\NormalTok{,}\StringTok{"sick"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"sidewalk"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}
+                             \StringTok{"sink"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"sister"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"soap"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}
+                             \StringTok{"sock"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"soup"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"suitcase"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}
+                             \StringTok{"sun"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"sunny"}\OtherTok{=}\StringTok{"alveolar"}\NormalTok{,}\StringTok{"walk"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}
+                             \StringTok{"washer"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}\StringTok{"watch"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}\StringTok{"water"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}
+                        \StringTok{"web"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}\StringTok{"wet"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}\StringTok{"wheel"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}
+                             \StringTok{"wind"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{,}\StringTok{"window"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{, }\StringTok{"waiting"}\OtherTok{=}\StringTok{"labiovelar"}\NormalTok{),}
+        \AttributeTok{backness =} \FunctionTok{recode}\NormalTok{(Word, }\StringTok{"sad"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"chair"}\OtherTok{=}\StringTok{"rhotic"}\NormalTok{,}\StringTok{"cheese"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"chicken"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"rabbit"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"rain"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"rainbow"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"raisins"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"reading"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"red"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"rock"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"rocking"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                       \StringTok{"running"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"sad"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"sandbox"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"sandwich"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"scissors"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"share"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"sharing"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"sheep"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"shell"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                       \StringTok{"ship"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"shoe"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"shoes"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                       \StringTok{"shorts"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"shoulder"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"shovel"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                             \StringTok{"shower"}\OtherTok{=}\StringTok{"diphthong"}\NormalTok{,}\StringTok{"sick"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"sidewalk"}\OtherTok{=}\StringTok{"diphthong"}\NormalTok{,}
+                             \StringTok{"sink"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"sister"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"soap"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                             \StringTok{"sock"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"soup"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"suitcase"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                             \StringTok{"sun"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"sunny"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"walk"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                             \StringTok{"washer"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"watch"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}\StringTok{"water"}\OtherTok{=}\StringTok{"back"}\NormalTok{,}
+                        \StringTok{"web"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"wet"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"wheel"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}
+                             \StringTok{"wind"}\OtherTok{=}\StringTok{"front"}\NormalTok{,}\StringTok{"window"}\OtherTok{=}\StringTok{"front"}\NormalTok{, }\StringTok{"waiting"}\OtherTok{=}\StringTok{"front"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{demographic-details-for-methods}{%
+\section{demographic details for methods}\label{demographic-details-for-methods}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# num of unique children in each condition}
+\NormalTok{child\_cts }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{preSubject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"(L).*"}\NormalTok{,}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{,Speaker)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(preSubject, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(hearing\_status) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{count}\NormalTok{() }
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}\# of unique children:\textquotesingle{}}\NormalTok{, }\FunctionTok{sum}\NormalTok{(child\_cts}\SpecialCharTok{$}\NormalTok{n))) }\CommentTok{\# two children contributed data from the same timepoint for the HA and CA conditions, 6 children contributed tp1 and tp3 data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "# of unique children: 72"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CI\_child }\OtherTok{\textless{}{-}}\NormalTok{ child\_cts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}\# of children with CIs:\textquotesingle{}}\NormalTok{, CI\_child}\SpecialCharTok{$}\NormalTok{n))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "# of children with CIs: 28"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{NH\_child }\OtherTok{\textless{}{-}}\NormalTok{ child\_cts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{!=}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}\# of *unique* children with NH:\textquotesingle{}}\NormalTok{, }\FunctionTok{sum}\NormalTok{(NH\_child}\SpecialCharTok{$}\NormalTok{n)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "# of *unique* children with NH: 44"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# gender distribution of unique children with NH}
+\NormalTok{NH\_gender }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{!=}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{preSubject=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"(L).*"}\NormalTok{,}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{,Speaker)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(preSubject, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Gender) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+
+
+\CommentTok{\# device formation}
+\NormalTok{CI\_device }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(device\_formation) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+
+\NormalTok{CI\_implant\_age }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{avg\_implant\_age =} \FunctionTok{mean}\NormalTok{(age\_at\_activation),}
+            \AttributeTok{sd\_implant\_age =} \FunctionTok{sd}\NormalTok{(age\_at\_activation),}
+            \AttributeTok{min\_implant\_age =} \FunctionTok{min}\NormalTok{(age\_at\_activation),}
+            \AttributeTok{max\_implant\_age =} \FunctionTok{max}\NormalTok{(age\_at\_activation))}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}avg age at implantation:\textquotesingle{}}\NormalTok{, }\FunctionTok{round}\NormalTok{(CI\_implant\_age}\SpecialCharTok{$}\NormalTok{avg\_implant\_age,}\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "avg age at implantation: 18.96"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}sd:\textquotesingle{}}\NormalTok{, }\FunctionTok{round}\NormalTok{(CI\_implant\_age}\SpecialCharTok{$}\NormalTok{sd\_implant\_age,}\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "sd: 10.68"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}range:\textquotesingle{}}\NormalTok{, }\FunctionTok{round}\NormalTok{(CI\_implant\_age}\SpecialCharTok{$}\NormalTok{min\_implant\_age,}\DecValTok{2}\NormalTok{),}\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{,}\FunctionTok{round}\NormalTok{(CI\_implant\_age}\SpecialCharTok{$}\NormalTok{max\_implant\_age,}\DecValTok{2}\NormalTok{),}\StringTok{\textquotesingle{}months\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "range: 6 - 45 months"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# gender distribution}
+\NormalTok{CI\_gender }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Gender) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+
+
+\CommentTok{\# including the children grouped under *both* HA and chrono age matches; these are the actual \#s of children in each condition}
+\NormalTok{dup\_child\_cts }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+
+\NormalTok{chrono\_child }\OtherTok{\textless{}{-}}\NormalTok{ dup\_child\_cts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}\# of chronological age matches, including duplicate children:\textquotesingle{}}\NormalTok{, chrono\_child}\SpecialCharTok{$}\NormalTok{n))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "# of chronological age matches, including duplicate children: 27"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ha\_child }\OtherTok{\textless{}{-}}\NormalTok{ dup\_child\_cts }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}\# of hearing age matches, including duplicate children:\textquotesingle{}}\NormalTok{, ha\_child}\SpecialCharTok{$}\NormalTok{n))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "# of hearing age matches, including duplicate children: 25"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# and their genders}
+\NormalTok{chrono\_child\_gender }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Gender) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+
+\NormalTok{ha\_child\_gender }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Gender) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# age \& SES stats}
+\CommentTok{\# do this separately for the two conditions because some kids were excluded }
+\CommentTok{\# from one condition (hearing age too young) but not the other condition}
+\NormalTok{ha\_stats }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Hearing\_age }\SpecialCharTok{\textgreater{}} \DecValTok{11} \SpecialCharTok{\&}\NormalTok{ Speaker }\SpecialCharTok{!=} \StringTok{\textquotesingle{}300E57MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# remove the 3 children who weren\textquotesingle{}t matched}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match }\SpecialCharTok{!=} \StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_ha =} \FunctionTok{mean}\NormalTok{(Hearing\_age),}
+            \AttributeTok{sd\_ha =} \FunctionTok{sd}\NormalTok{(Hearing\_age),}
+            \AttributeTok{range\_ha =} \FunctionTok{paste}\NormalTok{(}\FunctionTok{min}\NormalTok{(Hearing\_age), }\StringTok{\textquotesingle{},\textquotesingle{}}\NormalTok{, }\FunctionTok{max}\NormalTok{(Hearing\_age)),}
+            \AttributeTok{mean\_mat\_ed =} \FunctionTok{mean}\NormalTok{(Mat\_ed),}
+            \AttributeTok{sd\_mat\_ed =} \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(Mat\_ed),}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{chrono\_stats }\OtherTok{\textless{}{-}}\NormalTok{ demo\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Speaker }\SpecialCharTok{!=} \StringTok{\textquotesingle{}307E44MS1\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}\CommentTok{\# remove the child that wasn\textquotesingle{}t matched}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match }\SpecialCharTok{!=} \StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_chrono =} \FunctionTok{mean}\NormalTok{(Chrono\_age),}
+            \AttributeTok{sd\_chrono =} \FunctionTok{sd}\NormalTok{(Chrono\_age),}
+            \AttributeTok{range\_chrono =} \FunctionTok{paste}\NormalTok{(}\FunctionTok{min}\NormalTok{(Chrono\_age), }\StringTok{\textquotesingle{},\textquotesingle{}}\NormalTok{, }\FunctionTok{max}\NormalTok{(Chrono\_age)),}
+            \AttributeTok{mean\_mat\_ed =} \FunctionTok{mean}\NormalTok{(Mat\_ed),}
+            \AttributeTok{sd\_mat\_ed =} \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(Mat\_ed),}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{write-out-data-for-vowel-analysis}{%
+\section{write out data for vowel analysis}\label{write-out-data-for-vowel-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# }\AlertTok{TODO}\CommentTok{ : write out demographic data to analyze vowels separately}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-pre-processing-coarticulation}{%
+\section{data pre-processing coarticulation}\label{data-pre-processing-coarticulation}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# select only word{-}initial CV sequences}
+\NormalTok{data7 }\OtherTok{\textless{}{-}}\NormalTok{ data6 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Word }\SpecialCharTok{!=}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}\CommentTok{\# remove empty annotations}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{var =} \FunctionTok{paste}\NormalTok{(Word,Previous)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(var }\SpecialCharTok{!=} \StringTok{\textquotesingle{}sister IH1\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}shorts T\textquotesingle{}} 
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}shorts OW1\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}shower AW1\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}suitcase K\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}suitcase EY1\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}sidewalk D\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}washer AH1\textquotesingle{}} 
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}sandwich D\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}sandwich IH2\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}sharing EY1\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}chair AY1\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}sandbox K\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}share AY1\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}watch AH1\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}suitcase EY2\textquotesingle{}}
+         \SpecialCharTok{\&}\NormalTok{ var}\SpecialCharTok{!=}\StringTok{\textquotesingle{}chair EY1\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# for coartic analysis, select only the words that were repeated at all timepoints }
+\NormalTok{subdata }\OtherTok{\textless{}{-}}\NormalTok{ data7 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sandwich\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}scissors\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}share\textquotesingle{}} \SpecialCharTok{|} 
+\NormalTok{           Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sharing\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sheep\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}shoe\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}shoes\textquotesingle{}} \SpecialCharTok{|} 
+\NormalTok{           Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}shorts\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}shovel\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}shower\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sick\textquotesingle{}} \SpecialCharTok{|} 
+\NormalTok{           Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sink\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}soup\textquotesingle{}} \SpecialCharTok{|}
+\NormalTok{         Word}\SpecialCharTok{==}\StringTok{\textquotesingle{}sun\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{subdata2 }\OtherTok{\textless{}{-}}\NormalTok{ subdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Analysis}\SpecialCharTok{!=}\StringTok{\textquotesingle{}DONTUSE\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# remove words unable to segment}
+  \FunctionTok{filter}\NormalTok{(Repetition}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}} \SpecialCharTok{|} 
+\NormalTok{           (Repetition}\SpecialCharTok{==}\DecValTok{2} \SpecialCharTok{\&}\NormalTok{ Analysis}\SpecialCharTok{==}\StringTok{\textquotesingle{}USE\textquotesingle{}}\NormalTok{) }\SpecialCharTok{|} 
+\NormalTok{           (Repetition}\SpecialCharTok{==}\DecValTok{3} \SpecialCharTok{\&}\NormalTok{ Analysis}\SpecialCharTok{==}\StringTok{\textquotesingle{}USE\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only use second/third repetitions when marked to do so}
+  \FunctionTok{filter}\NormalTok{(Analysis}\SpecialCharTok{!=}\StringTok{\textquotesingle{}VOWELONLY\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Analysis}\SpecialCharTok{!=}\StringTok{\textquotesingle{}VowelOnly\textquotesingle{}}\NormalTok{) }\CommentTok{\# remove words marked to only do vowel analysis on}
+
+\CommentTok{\# get some summary stats on words removed; only reflects words removed from both coartic and vowel analyses}
+\NormalTok{rmvd\_stats }\OtherTok{\textless{}{-}}\NormalTok{ subdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{total\_words =} \FunctionTok{n}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Analysis}\SpecialCharTok{!=}\StringTok{\textquotesingle{}DONTUSE\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# remove words unable to segment}
+  \FunctionTok{filter}\NormalTok{(Repetition}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}} \SpecialCharTok{|} 
+\NormalTok{           (Repetition}\SpecialCharTok{==}\DecValTok{2} \SpecialCharTok{\&}\NormalTok{ Analysis}\SpecialCharTok{==}\StringTok{\textquotesingle{}USE\textquotesingle{}}\NormalTok{) }\SpecialCharTok{|} 
+\NormalTok{           (Repetition}\SpecialCharTok{==}\DecValTok{3} \SpecialCharTok{\&}\NormalTok{ Analysis}\SpecialCharTok{==}\StringTok{\textquotesingle{}USE\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only use second/third repetitions when marked to do so}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{percen\_used =}\NormalTok{ (}\FunctionTok{n}\NormalTok{()}\SpecialCharTok{/}\NormalTok{total\_words)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# convert structure of spectral measurements at edges to something computable}
+\CommentTok{\# remove brackets}
+\NormalTok{subdata2}\SpecialCharTok{$}\NormalTok{Spectrum }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{( }\StringTok{\textquotesingle{}]\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, subdata2}\SpecialCharTok{$}\NormalTok{Spectrum)}
+\NormalTok{subdata2}\SpecialCharTok{$}\NormalTok{Spectrum }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{( }\StringTok{\textquotesingle{}[ \textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, subdata2}\SpecialCharTok{$}\NormalTok{Spectrum, }\AttributeTok{fixed =} \ConstantTok{TRUE}\NormalTok{) }\CommentTok{\# open bracket denotes regex so fix it}
+
+\CommentTok{\# convert measurements to string}
+\NormalTok{subdata2}\SpecialCharTok{$}\NormalTok{variable\_sep }\OtherTok{\textless{}{-}} \FunctionTok{str\_extract\_all}\NormalTok{(subdata2}\SpecialCharTok{$}\NormalTok{Spectrum, }\StringTok{"[{-}0{-}9}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.]+"}\NormalTok{)}
+
+\CommentTok{\# for euclidean distance and raw distance, convert to numeric: }
+\NormalTok{subdata2}\SpecialCharTok{$}\NormalTok{spec\_vector }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(subdata2}\SpecialCharTok{$}\NormalTok{variable\_sep , }\AttributeTok{FUN =}\NormalTok{ as.numeric)}
+\NormalTok{subdata2 }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(subdata2)}
+
+
+\CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-} option to find raw difference/euclidean between vectors {-}{-}{-}{-}{-}{-}{-}{-}}
+\ControlFlowTok{if}\NormalTok{(}\FunctionTok{any}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"package:plyr"}\NormalTok{, }\FunctionTok{search}\NormalTok{()))) }\FunctionTok{detach}\NormalTok{(}\StringTok{"package:plyr"}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{message}\NormalTok{(}\StringTok{"plyr not loaded"}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}dplyr\textquotesingle{}}\NormalTok{)}
+
+
+\CommentTok{\# calculate raw difference (sanity check) and euc distance between vectors}
+\NormalTok{diff\_df }\OtherTok{\textless{}{-}}\NormalTok{ subdata2 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Speaker, match, Word, Word\_duration) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# IMPORTANT: always group by Speaker + match b/c two participants contributed the same recording(HA and chrono matched)}
+  \CommentTok{\#mutate(raw\_diff = map2(spec\_vector, lead(spec\_vector), \textasciigrave{}{-}\textasciigrave{})) \%\textgreater{}\% \# sanity check (note to take absolute value because the direction of the calculation will differ e.g. aI {-} K versus t {-} u)}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{euc\_dist =} \FunctionTok{map2}\NormalTok{(spec\_vector, }\FunctionTok{lead}\NormalTok{(spec\_vector), }\ControlFlowTok{function}\NormalTok{(x, y) }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{((x}\SpecialCharTok{{-}}\NormalTok{y) }\SpecialCharTok{\^{}} \DecValTok{2}\NormalTok{)))) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{as.data.frame}\NormalTok{() }
+
+\CommentTok{\# remove NA rows where measurement was made upon but not stored}
+\NormalTok{df.final }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(diff\_df, euc\_dist }\SpecialCharTok{!=} \StringTok{\textquotesingle{}0\textquotesingle{}}\NormalTok{)}
+\NormalTok{df.final}\SpecialCharTok{$}\NormalTok{euc\_dist }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(df.final}\SpecialCharTok{$}\NormalTok{euc\_dist)}
+
+\CommentTok{\# sanity check {-} no word*speaker*Word\_duration should have more than 1 row}
+\NormalTok{df\_ct }\OtherTok{\textless{}{-}}\NormalTok{ df.final }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Speaker, match, Word, Word\_duration) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\CommentTok{\# some children still have 3+ repetitions of individual words}
+\CommentTok{\# in those case, randomly select 2 utterances}
+\NormalTok{df.final2 }\OtherTok{\textless{}{-}}\NormalTok{ df.final }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#distinct\_at(vars(Speaker, match, Word, Word\_duration), .keep\_all = T) \%\textgreater{}\% \# get each speaker\textquotesingle{}s individual word, including duplicate elicitations}
+  \FunctionTok{add\_count}\NormalTok{(Speaker, match, Word) }
+
+\NormalTok{tworeps }\OtherTok{\textless{}{-}}\NormalTok{ df.final2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(n}\SpecialCharTok{==}\StringTok{\textquotesingle{}1\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ n}\SpecialCharTok{==}\StringTok{\textquotesingle{}2\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{df.final3 }\OtherTok{\textless{}{-}}\NormalTok{ df.final2 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(n}\SpecialCharTok{==}\StringTok{\textquotesingle{}4\textquotesingle{}} \SpecialCharTok{|}\NormalTok{ n}\SpecialCharTok{==}\StringTok{\textquotesingle{}3\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Speaker, match, Word) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{sample\_n}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# sample two elicitations}
+  \FunctionTok{rbind}\NormalTok{(., tworeps) }\CommentTok{\# put back together}
+
+\CommentTok{\# what \% of words by hearing condition were *first* repetitions?}
+\NormalTok{reps }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{total\_reps =} \FunctionTok{n}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match, Repetition) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{percen\_rep =}\NormalTok{ (}\FunctionTok{n}\NormalTok{()}\SpecialCharTok{/}\NormalTok{total\_reps)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{coarticulation-analysis}{%
+\section{coarticulation analysis}\label{coarticulation-analysis}}
+
+\hypertarget{coartic-by-hearing-status}{%
+\subsection{coartic by hearing status}\label{coartic-by-hearing-status}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coartic\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(poa, match, euc\_dist) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match, poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_coartic =} \FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(euc\_dist),}\DecValTok{2}\NormalTok{),}
+            \AttributeTok{sd\_coartic =} \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(euc\_dist),}\DecValTok{2}\NormalTok{),}
+            \AttributeTok{range\_coartic =} \FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(euc\_dist),}\DecValTok{2}\NormalTok{),}\StringTok{"{-}"}\NormalTok{,}\FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(euc\_dist),}\DecValTok{2}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{stats=}\FunctionTok{paste}\NormalTok{(mean\_coartic,}\StringTok{"("}\NormalTok{,sd\_coartic,}\StringTok{")"}\NormalTok{,range\_coartic)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{mean\_coartic, }\SpecialCharTok{{-}}\NormalTok{sd\_coartic, }\SpecialCharTok{{-}}\NormalTok{range\_coartic) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{spread}\NormalTok{(}\StringTok{"poa"}\NormalTok{, }\StringTok{"stats"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{match=}\FunctionTok{recode}\NormalTok{(match, }\StringTok{"CI"}\OtherTok{=}\StringTok{"CIs"}\NormalTok{, }\StringTok{"HA\_match"}\OtherTok{=}\StringTok{"Hearing age matches"}\NormalTok{, }\StringTok{"Chrono\_age\_match"}\OtherTok{=}\StringTok{"Chronological age matches"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(coartic\_tbl, }\AttributeTok{caption =} \StringTok{\textquotesingle{}Mean spectral distance between C{-}V by hearing status and consonant\textquotesingle{}}\NormalTok{, }
+             \AttributeTok{booktabs=}\NormalTok{T,}
+             \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Hearing status"}\NormalTok{, }\StringTok{"[s{-}V]"}\NormalTok{, }\StringTok{"[SH{-}V]"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{kable\_styling}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"Spectral distance"} \OtherTok{=} \DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:acoustic-descrip}Mean spectral distance between C-V by hearing status and consonant}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{Spectral distance} \\
+\cmidrule(l{3pt}r{3pt}){2-3}
+Hearing status & [s-V] & [SH-V]\\
+\midrule
+Chronological age matches & 11.95 ( 4.26 ) 2.15 - 30.24 & 11.9 ( 3.46 ) 3.11 - 31.81\\
+CIs & 10.93 ( 2.95 ) 5.46 - 29.15 & 10.95 ( 3.4 ) 2.64 - 30.1\\
+Hearing age matches & 11.92 ( 3.98 ) 6.32 - 29.27 & 11.48 ( 3.8 ) 5.6 - 28.77\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+We first computed coarticulation, or the Mel spectral distance between phones, by hearing status, within each target CV sequence, where a larger distance indicates less coarticulatory overlap. Descriptive statistics in Table \ref{tab:acoustic-descrip} show differences in coarticulation by hearing status: children with CIs coarticulate more within {[}s-V{]} and {[}S-V{]} sequences than both groups of children with NH. A linear mixed effects model was fit to predict the Mel spectral distance between phones in each target CV sequence (model summary in Table \ref{tab:coartic-model}). The baseline model included random effects for \textbf{Word} and \textbf{Speaker}. \textbf{Word duration} was additionally added to control for the effect of speaking rate on coarticulation and \textbf{Child Chronological Age} was added to control for age-related changes in coarticulation unrelated to the other variables of interest. The effect of \textbf{Hearing Status} improved upon this model fit: children with CIs coarticulated significantly more within CV sequences than their chronological age-matched peers. They tended to coarticulate more than their hearing age matches as well (Figure \ref{fig:vocab-by-coartic-plot}), but this effect was not significant under an alpha value of .05, suggesting that children with CIs pattern coarticulatorily closer to their hearing age matches. Neither \textbf{Place of Articulation} ({[}s{]} versus {[}S{]}) nor its interaction with \textbf{Hearing Status} improved upon model fit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{center\_scale }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+  \FunctionTok{scale}\NormalTok{(x, }\AttributeTok{scale =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{\}}
+\NormalTok{coartic\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration =} \FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{coartic\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age}
+
+\NormalTok{coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ordered =} \ConstantTok{FALSE}\NormalTok{ )}
+\NormalTok{coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{relevel}\NormalTok{(coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ref =} \StringTok{"CI"}\NormalTok{)}
+\NormalTok{baseline }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}} \SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{m1 }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(baseline, m1) }\CommentTok{\# improves}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## baseline: euc_dist ~ +(1 | Speaker) + (1 | Word)
+## m1: euc_dist ~ Word_duration + (1 | Speaker) + (1 | Word)
+##          npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+## baseline    4 6177.8 6198.1 -3084.9   6169.8                       
+## m1          5 6176.3 6201.6 -3083.2   6166.3 3.5059  1    0.06115 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1a }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(m1, m1a) }\CommentTok{\# doesn\textquotesingle{}t improve but we keep to control for age{-}related changes}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## m1: euc_dist ~ Word_duration + (1 | Speaker) + (1 | Word)
+## m1a: euc_dist ~ Chrono_age_centered + Word_duration + (1 | Speaker) + 
+## m1a:     (1 | Word)
+##     npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## m1     5 6176.3 6201.6 -3083.2   6166.3                     
+## m1a    6 6178.0 6208.4 -3083.0   6166.0 0.2871  1     0.5921
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ordered =} \ConstantTok{FALSE}\NormalTok{ )}
+\NormalTok{coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{relevel}\NormalTok{(coartic\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ref =} \StringTok{"CI"}\NormalTok{)}
+\NormalTok{m2 }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+}
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(m1a, m2) }\CommentTok{\# improves }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## m1a: euc_dist ~ Chrono_age_centered + Word_duration + (1 | Speaker) + 
+## m1a:     (1 | Word)
+## m2: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## m2:     Speaker) + (1 | Word)
+##     npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+## m1a    6 6178.0 6208.4 -3083.0   6166.0                       
+## m2     8 6176.9 6217.4 -3080.4   6160.9 5.1229  2    0.07719 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2a }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match}\SpecialCharTok{*}\NormalTok{Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(m2, m2a) }\CommentTok{\# doesn\textquotesingle{}t improve}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## m2: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## m2:     Speaker) + (1 | Word)
+## m2a: euc_dist ~ match * Chrono_age_centered + Word_duration + (1 | 
+## m2a:     Speaker) + (1 | Word)
+##     npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## m2     8 6176.9 6217.4 -3080.4   6160.9                     
+## m2a   10 6179.2 6229.8 -3079.6   6159.2 1.6616  2     0.4357
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ poa }\SpecialCharTok{+} 
+\NormalTok{         match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(m2, m3) }\CommentTok{\# doesn\textquotesingle{}t improve; no effect of s\textasciitilde{}SH }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## m2: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## m2:     Speaker) + (1 | Word)
+## m3: euc_dist ~ poa + match + Chrono_age_centered + Word_duration + 
+## m3:     (1 | Speaker) + (1 | Word)
+##    npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## m2    8 6176.9 6217.4 -3080.4   6160.9                     
+## m3    9 6178.9 6224.4 -3080.4   6160.9 0.0195  1      0.889
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m4 }\OtherTok{\textless{}{-}}\NormalTok{ coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ poa}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(m2, m4) }\CommentTok{\# doesn\textquotesingle{}t improve; no effect of s\textasciitilde{}SH dependent on hearing status }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## m2: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## m2:     Speaker) + (1 | Word)
+## m4: euc_dist ~ poa * match + Chrono_age_centered + Word_duration + 
+## m4:     (1 | Speaker) + (1 | Word)
+##    npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## m2    8 6176.9 6217.4 -3080.4   6160.9                     
+## m4   11 6181.9 6237.5 -3079.9   6159.9 1.0386  3     0.7919
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# final model; make a table }
+\NormalTok{coartic\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  lme4}\SpecialCharTok{::}\FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+}\NormalTok{ Chrono\_age\_centered }\SpecialCharTok{+}\NormalTok{ Word\_duration }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }\AttributeTok{data=}\NormalTok{.) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{stargazer}\NormalTok{(., }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{, }
+            \AttributeTok{dep.var.caption =} \StringTok{""}\NormalTok{, }
+            \AttributeTok{dep.var.labels.include =} \ConstantTok{FALSE}\NormalTok{,  }
+            \AttributeTok{type =} \StringTok{"latex"}\NormalTok{,}
+            \AttributeTok{star.cutoffs=}\FunctionTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.01}\NormalTok{,}\FloatTok{0.001}\NormalTok{), }
+            \AttributeTok{star.char =} \FunctionTok{c}\NormalTok{(}\StringTok{"*"}\NormalTok{, }\StringTok{"**"}\NormalTok{, }\StringTok{"***"}\NormalTok{),}
+            \AttributeTok{title=}\StringTok{"Model predicting Mel spectral distance by hearing status"}\NormalTok{,  }
+            \AttributeTok{digits =} \DecValTok{2}\NormalTok{, }
+            \AttributeTok{ci =} \ConstantTok{TRUE}\NormalTok{, }
+            \AttributeTok{style =} \StringTok{"all"}\NormalTok{,}
+            \AttributeTok{order=}\FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{),}
+            \AttributeTok{covariate.labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"Hearing age matches"}\NormalTok{, }\StringTok{"Chronological age matches"}\NormalTok{,  }\StringTok{"Child chronological age"}\NormalTok{, }\StringTok{"Word duration"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## \begin{table}[!htbp] \centering 
+##   \caption{Model predicting Mel spectral distance by hearing status} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  Intercept & 10.86$^{***}$ \\ 
+##   & (8.64, 13.09) \\ 
+##   & t = 9.57 \\ 
+##   & p = 0.00 \\ 
+##   Hearing age matches & 0.83 \\ 
+##   & ($-$0.18, 1.85) \\ 
+##   & t = 1.61 \\ 
+##   & p = 0.11 \\ 
+##   Chronological age matches & 0.90$^{*}$ \\ 
+##   & (0.09, 1.72) \\ 
+##   & t = 2.18 \\ 
+##   & p = 0.03 \\ 
+##   Child chronological age & 0.003 \\ 
+##   & ($-$0.03, 0.04) \\ 
+##   & t = 0.15 \\ 
+##   & p = 0.89 \\ 
+##   Word duration & 1.97 \\ 
+##   & ($-$0.09, 4.03) \\ 
+##   & t = 1.87 \\ 
+##   & p = 0.07 \\ 
+##  \hline \\[-1.8ex] 
+## Observations & 1,163 \\ 
+## Log Likelihood & $-$3,082.78 \\ 
+## Akaike Inf. Crit. & 6,181.55 \\ 
+## Bayesian Inf. Crit. & 6,222.02 \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.05; $^{**}$p$<$0.01; $^{***}$p$<$0.001} \\ 
+## \end{tabular} 
+## \end{table}
+\end{verbatim}
+
+\hypertarget{coarticulation-by-hearing-age-in-children-with-cis}{%
+\subsection{Coarticulation by hearing age in children with CIs}\label{coarticulation-by-hearing-age-in-children-with-cis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# children with CIs where we expect an effect of hearing age, but not chrono age}
+\NormalTok{ci\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration =} \FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{ci\_model\_data}\SpecialCharTok{$}\NormalTok{Hearing\_age\_centered }\OtherTok{=} \FunctionTok{center\_scale}\NormalTok{(ci\_model\_data}\SpecialCharTok{$}\NormalTok{Hearing\_age)}
+\NormalTok{ci\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{=} \FunctionTok{center\_scale}\NormalTok{(ci\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age)}
+
+\NormalTok{age\_m }\OtherTok{\textless{}{-}}\NormalTok{ ci\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{age\_mI }\OtherTok{\textless{}{-}}\NormalTok{ ci\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hearing\_age\_centered }\SpecialCharTok{+}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(age\_m, age\_mI) }\CommentTok{\# significantly improves}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## age_m: euc_dist ~ Word_duration + (1 | Speaker) + (1 | Word)
+## age_mI: euc_dist ~ Hearing_age_centered + Word_duration + (1 | Speaker) + 
+## age_mI:     (1 | Word)
+##        npar    AIC    BIC  logLik deviance Chisq Df Pr(>Chisq)  
+## age_m     5 1911.9 1931.5 -950.95   1901.9                      
+## age_mI    6 1909.8 1933.3 -948.90   1897.8 4.093  1    0.04306 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hearing\_age\_model }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(age\_mI)}
+
+\NormalTok{age\_mII }\OtherTok{\textless{}{-}}\NormalTok{ ci\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Chrono\_age\_centered }\SpecialCharTok{+}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\NormalTok{chrono\_log\_test }\OtherTok{\textless{}{-}} \FunctionTok{anova}\NormalTok{(age\_m, age\_mII) }\CommentTok{\# no effect}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}}\NormalTok{ chrono\_log\_test}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{Pr(\textgreater{}Chisq)}\StringTok{\textasciigrave{}}\NormalTok{[}\DecValTok{2}\NormalTok{]}
+
+\NormalTok{age\_mIII }\OtherTok{\textless{}{-}}\NormalTok{ ci\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hearing\_age\_centered }\SpecialCharTok{+}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         poa }\SpecialCharTok{+}
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(age\_mI, age\_mIII) }\CommentTok{\# no effect of poa}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## age_mI: euc_dist ~ Hearing_age_centered + Word_duration + (1 | Speaker) + 
+## age_mI:     (1 | Word)
+## age_mIII: euc_dist ~ Hearing_age_centered + Word_duration + poa + (1 | 
+## age_mIII:     Speaker) + (1 | Word)
+##          npar    AIC    BIC logLik deviance  Chisq Df Pr(>Chisq)
+## age_mI      6 1909.8 1933.3 -948.9   1897.8                     
+## age_mIII    7 1911.8 1939.2 -948.9   1897.8 0.0012  1     0.9727
+\end{verbatim}
+
+We next evaluated the role of hearing versus chronological age upon the children with CIs' coarticulation. A linear mixed effects model, with random effects of \textbf{Word} and \textbf{Speaker} and a fixed effect of \textbf{Word duration}, was fit to predict the degree of coarticulation for the children with CIs. There was a significant effect of \textbf{Hearing Age} (\(\beta\)=0.04, t=2.03, p=0.05), but not \textbf{Chronological Age} (model comparison with and without \textbf{Chronological age}: \(\chi^2\)=0.88, df=1, p=0.35), indicating that it was the children with CIs' increased \emph{hearing} experience, and not other chronological age-related maturity such as physiological development or domain general fine motor control, that best predicted the degree of their coarticulation (Figure \ref{fig:coartic-by-hearing-age-plot}. There was again no significant effect of \textbf{Place of Articulation}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# fit the model}
+\NormalTok{ci\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }
+
+\NormalTok{hearing\_age\_m }\OtherTok{\textless{}{-}}\NormalTok{ ci\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  lme4}\SpecialCharTok{::}\FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hearing\_age }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\NormalTok{ci\_data}\SpecialCharTok{$}\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(hearing\_age\_m) }
+
+\NormalTok{ci\_data }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# }\AlertTok{TODO}\CommentTok{: note in the methods that the 7mo hearing age CI child (803E41FS1) was removed because they didn\textquotesingle{}t produce any fricatives reliably  }
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Hearing\_age, }\AttributeTok{y=}\NormalTok{euc\_dist),}\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{shape=}\NormalTok{Phone) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{20}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{size=}\DecValTok{2}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{2}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{shape=}\NormalTok{Phone, }\AttributeTok{fill=}\NormalTok{Phone)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_smooth}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill=}\NormalTok{Phone, }\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{lty=}\NormalTok{Phone)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{fit), }\AttributeTok{size=}\DecValTok{1}\NormalTok{,}\AttributeTok{color=}\StringTok{"grey30"}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# the actual model fit}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Hearing age (months)"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks=}\FunctionTok{seq}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{60}\NormalTok{,}\DecValTok{5}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{12}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{11}\NormalTok{, }\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(.}\DecValTok{15}\NormalTok{,.}\DecValTok{85}\NormalTok{),}
+       \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill=}\StringTok{"white"}\NormalTok{, }
+                                  \AttributeTok{size=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"solid"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{colour =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{override.aes =} \FunctionTok{list}\NormalTok{(}\AttributeTok{alpha =}\NormalTok{ .}\DecValTok{55}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/coartic-by-hearing-age-plot-1.pdf}
+
+\hypertarget{coarticulation-by-vocabulary-size-and-daily-speech-practice}{%
+\subsection{Coarticulation by vocabulary size and daily speech practice}\label{coarticulation-by-vocabulary-size-and-daily-speech-practice}}
+
+To further evaluate the role of hearing status on coarticulation, we examined the interaction of hearing status with two known predictors of child coarticulation---vocabulary size (EVT-2) and hourly child vocalization count (average number of times per hour that the child vocalized in their at-home recording)---and two novel measures that we predicted might predict coarticulation: articulation skill (GFTA-2) and minimal pair discrimination ability. Descriptive statistics of these predictors by hearing status are listed in Table \ref{tab:descrip-tbl}. For the vocabulary and articulation scores, we report growth scale values (vocabulary) and standard scores (articulation) which are transformations of raw scores that grow linearly with age.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocab\_gsv\_stats }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# 76 *unique* EVT scores, but 78 total as two children are included in both HA and Chrono groups }
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker,match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{EVT\_GSV=}\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(EVT\_GSV))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(match, EVT\_GSV) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{EVT\_GSV\_stats=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(EVT\_GSV, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"("}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(EVT\_GSV, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{")"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(EVT\_GSV, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"{-}"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(EVT\_GSV, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{)))}
+
+\NormalTok{vocab\_standard\_stats }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# 76 *unique* EVT scores, but 78 total as two children are included in both HA and Chrono groups }
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker,match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{EVT\_Standard=}\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(EVT\_Standard))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(match, EVT\_Standard) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{EVT\_Standard\_stats=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(EVT\_Standard, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"("}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(EVT\_Standard, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{")"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(EVT\_Standard, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"{-}"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(EVT\_Standard, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{)))}
+
+\NormalTok{gfta\_stats }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# 72 total gfta scores }
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker,match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{GFTA\_Standard=}\FunctionTok{as.numeric}\NormalTok{(GFTA\_Standard)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(match, GFTA\_Standard) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{GFTA\_stats=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(GFTA\_Standard, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"("}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(GFTA\_Standard,}\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{")"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(GFTA\_Standard,}\AttributeTok{na.rm =}\NormalTok{ T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"{-}"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(GFTA\_Standard,}\AttributeTok{na.rm =}\NormalTok{ T),}\DecValTok{2}\NormalTok{)))}
+
+
+\NormalTok{minpair\_stats }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# }
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker,match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(match, MinPair\_ProportionCorrect) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{minpair\_stats=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(MinPair\_ProportionCorrect, }\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"("}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(MinPair\_ProportionCorrect,}\AttributeTok{na.rm=}\NormalTok{T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{")"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(MinPair\_ProportionCorrect,}\AttributeTok{na.rm =}\NormalTok{ T),}\DecValTok{2}\NormalTok{),}
+                                \StringTok{"{-}"}\NormalTok{,}
+                                \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(MinPair\_ProportionCorrect,}\AttributeTok{na.rm =}\NormalTok{ T),}\DecValTok{2}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., }\FunctionTok{c}\NormalTok{(}\StringTok{"Chrono\_age\_match"}\NormalTok{, }\StringTok{"NA"}\NormalTok{)) }\CommentTok{\#  add an NA row for chrono kids who didn\textquotesingle{}t complete this}
+
+
+\CommentTok{\# get LENA data for HA matches and CI kids (don\textquotesingle{}t have for chrono matches)}
+\NormalTok{new\_lena\_stats }\OtherTok{\textless{}{-}}\NormalTok{ data\_w\_lena }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}665L52FS4\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}679L58MS6\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}802E72FS3\textquotesingle{}} \SpecialCharTok{\&} \CommentTok{\# remove children who recorded 3+ months after testing}
+\NormalTok{           Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}806E42MS1\textquotesingle{}}\SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}809E64MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ CVC\_hourly}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only HA and CIs}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker,match), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(match, CVC\_hourly) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{CVC\_stats=}\FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(CVC\_hourly),}\DecValTok{2}\NormalTok{),}
+                            \StringTok{"("}\NormalTok{,}
+                            \FunctionTok{round}\NormalTok{(}\FunctionTok{sd}\NormalTok{(CVC\_hourly),}\DecValTok{2}\NormalTok{),}
+                            \StringTok{")"}\NormalTok{,}
+                            \FunctionTok{round}\NormalTok{(}\FunctionTok{min}\NormalTok{(CVC\_hourly),}\DecValTok{2}\NormalTok{),}
+                            \StringTok{"{-}"}\NormalTok{,}
+                            \FunctionTok{round}\NormalTok{(}\FunctionTok{max}\NormalTok{(CVC\_hourly),}\DecValTok{2}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., }\FunctionTok{c}\NormalTok{(}\StringTok{"Chrono\_age\_match"}\NormalTok{, }\StringTok{"NA"}\NormalTok{)) }\CommentTok{\#  add an NA row for chrono kids}
+
+
+
+\CommentTok{\# merge tables}
+\NormalTok{predic\_tbl }\OtherTok{\textless{}{-}}\NormalTok{ new\_lena\_stats }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{merge}\NormalTok{(., vocab\_gsv\_stats, }\AttributeTok{by=}\StringTok{"match"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., vocab\_standard\_stats, }\AttributeTok{by=}\StringTok{"match"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., gfta\_stats, }\AttributeTok{by=}\StringTok{"match"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{merge}\NormalTok{(., minpair\_stats, }\AttributeTok{by=}\StringTok{"match"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{match=}\FunctionTok{recode}\NormalTok{(match, }\StringTok{"CI"}\OtherTok{=}\StringTok{"CIs"}\NormalTok{, }\StringTok{"HA\_match"}\OtherTok{=}\StringTok{"Hearing age matches"}\NormalTok{, }\StringTok{"Chrono\_age\_match"}\OtherTok{=}\StringTok{"Chronological age matches"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# write out}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(predic\_tbl, }\AttributeTok{caption =} \StringTok{\textquotesingle{}Task statistics by hearing status\textquotesingle{}}\NormalTok{, }
+             \AttributeTok{booktabs=}\NormalTok{T,}
+             \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Hearing status"}\NormalTok{, }\StringTok{"mean (SD) range"}\NormalTok{, }\StringTok{"mean (SD) range"}\NormalTok{,  }\StringTok{"mean (SD) range"}\NormalTok{, }\StringTok{"mean (SD) range"}\NormalTok{, }\StringTok{"mean (SD) range"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+   \FunctionTok{column\_spec}\NormalTok{(., }\AttributeTok{column =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{, }\AttributeTok{width =} \StringTok{".4in"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{full\_width=}\NormalTok{F, }
+                \AttributeTok{latex\_options =} \StringTok{"hold\_position"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_header\_above}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"Hourly voc. count"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"EVT{-}2 GSVs"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"EVT{-}2 Standard Score"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"GFTA{-}2 Standard Score"} \OtherTok{=} \DecValTok{1}\NormalTok{, }
+                     \StringTok{"Discrim. prop. correct"} \OtherTok{=} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+
+\caption{\label{tab:all-task-stats-tbl}Task statistics by hearing status}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{.4in}>{\raggedright\arraybackslash}p{.4in}>{\raggedright\arraybackslash}p{.4in}>{\raggedright\arraybackslash}p{.4in}>{\raggedright\arraybackslash}p{.4in}>{\raggedright\arraybackslash}p{.4in}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{1}{c}{Hourly voc. count} & \multicolumn{1}{c}{EVT-2 GSVs} & \multicolumn{1}{c}{EVT-2 Standard Score} & \multicolumn{1}{c}{GFTA-2 Standard Score} & \multicolumn{1}{c}{Discrim. prop. correct} \\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
+Hearing status & mean (SD) range & mean (SD) range & mean (SD) range & mean (SD) range & mean (SD) range\\
+\midrule
+Chronological age matches & NA & 146.31 ( 11.94 ) 126 - 165 & 122.81 ( 16.42 ) 90 - 151 & 95.29 ( 13.59 ) 69 - 113 & NA\\
+CIs & 248.7 ( 89.15 ) 50.12 - 387.33 & 117 ( 25.69 ) 42 - 148 & 94.69 ( 20.48 ) 43 - 126 & 70.78 ( 18.47 ) 39 - 104 & 0.69 ( 0.15 ) 0.38 - 0.97\\
+Hearing age matches & 213.86 ( 95.13 ) 31.25 - 376.25 & 126.21 ( 18.99 ) 85 - 160 & 119.42 ( 18.98 ) 84 - 160 & 88.57 ( 12.96 ) 73 - 116 & 0.69 ( 0.15 ) 0.43 - 0.93\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# vocab}
+\NormalTok{vocab\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(EVT\_GSV}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# participants 310 (CI) and 390A (chrono) didn\textquotesingle{}t complete the EVT}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration =} \FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{vocab\_model\_data}\SpecialCharTok{$}\NormalTok{EVT\_GSV\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(vocab\_model\_data}\SpecialCharTok{$}\NormalTok{EVT\_GSV)}
+\NormalTok{vocab\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(vocab\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age) }\CommentTok{\# }\AlertTok{TODO}\CommentTok{: make sure this is centered in the coartic*hearing status model}
+
+\CommentTok{\# start where we left off above}
+\NormalTok{vocabI }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{vocabII }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered }\SpecialCharTok{+} 
+\NormalTok{         match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(vocabI, vocabII) }\CommentTok{\# not sig }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## vocabI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## vocabI:     Speaker) + (1 | Word)
+## vocabII: euc_dist ~ EVT_GSV_centered + match + Chrono_age_centered + Word_duration + 
+## vocabII:     (1 | Speaker) + (1 | Word)
+##         npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## vocabI     8 6033.3 6073.6 -3008.7   6017.3                     
+## vocabII    9 6033.4 6078.7 -3007.7   6015.4 1.9551  1      0.162
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocab\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(vocab\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ordered =} \ConstantTok{FALSE}\NormalTok{ )}
+\NormalTok{vocab\_model\_data}\SpecialCharTok{$}\NormalTok{match }\OtherTok{\textless{}{-}} \FunctionTok{relevel}\NormalTok{(vocab\_model\_data}\SpecialCharTok{$}\NormalTok{match, }\AttributeTok{ref =} \StringTok{"CI"}\NormalTok{)}
+\NormalTok{vocabIII }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(vocabII, vocabIII) }\CommentTok{\#  significant }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## vocabII: euc_dist ~ EVT_GSV_centered + match + Chrono_age_centered + Word_duration + 
+## vocabII:     (1 | Speaker) + (1 | Word)
+## vocabIII: euc_dist ~ EVT_GSV_centered * match + Chrono_age_centered + Word_duration + 
+## vocabIII:     (1 | Speaker) + (1 | Word)
+##          npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+## vocabII     9 6033.4 6078.7 -3007.7   6015.4                       
+## vocabIII   11 6031.9 6087.3 -3004.9   6009.9 5.4721  2    0.06482 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocab\_model }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(vocabIII)}
+
+\CommentTok{\# sig effect of vocab for CI kids, but no effect for hearing age or chrono age matches}
+
+\CommentTok{\# **** Exploratory ******}
+\CommentTok{\# maybe you have to get past a certain articulatory point before vocab can predict your outcomes?}
+\CommentTok{\# model the interaction of GFTA and vocab}
+\CommentTok{\#ci\_kids \textless{}{-} vocab\_model\_data \%\textgreater{}\% filter(match==\textquotesingle{}CI\textquotesingle{} \& GFTA\_Standard!=\textquotesingle{}NA\textquotesingle{})}
+\NormalTok{vocab\_GFTA }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{med\_gfta =} \FunctionTok{median}\NormalTok{(GFTA\_Standard,}\AttributeTok{na.rm =}\NormalTok{ T)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# select just the top half of CI kids and top half of HA kids, artic{-}wise}
+  \FunctionTok{filter}\NormalTok{(GFTA\_Standard}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(GFTA\_Standard }\SpecialCharTok{\textgreater{}}\NormalTok{ med\_gfta) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{med\_gfta) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#rbind(., ci\_kids) \%\textgreater{}\% \# it\textquotesingle{}s not fair to include all the CI kids because there\textquotesingle{}s more of them and they swamp the effect}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered }\SpecialCharTok{+}
+\NormalTok{       Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }\CommentTok{\# no effect of vocab on coartic when combining just the top half of CI kids and HA kids }
+
+\CommentTok{\# maybe you have to get past a certain vocabulary size before vocab can predict your outcomes? check with NH kids}
+\NormalTok{vocab\_size }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Chrono\_age}\SpecialCharTok{\textgreater{}=}\DecValTok{41}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#(the mean age in Cychosz et al. 2021)}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+  
+\CommentTok{\# try lumping all of the NH kids together, and limit it to the range studied in Cychosz et al. 2021}
+\NormalTok{vocab\_size2 }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(EVT\_GSV\textgreater{}=100) \%\textgreater{}\% \# only one kid in Cychosz et al had a score lower than this}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# final model, make a table}
+\NormalTok{vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  lme4}\SpecialCharTok{::}\FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+}\NormalTok{ Chrono\_age\_centered }\SpecialCharTok{+}\NormalTok{ Word\_duration }\SpecialCharTok{+}\NormalTok{  (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }\AttributeTok{data=}\NormalTok{.) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{stargazer}\NormalTok{(., }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{, }
+            \AttributeTok{dep.var.caption =} \StringTok{""}\NormalTok{, }
+            \AttributeTok{dep.var.labels.include =} \ConstantTok{FALSE}\NormalTok{,  }
+            \AttributeTok{type =} \StringTok{"latex"}\NormalTok{,}
+            \AttributeTok{star.cutoffs=}\FunctionTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.01}\NormalTok{,}\FloatTok{0.001}\NormalTok{), }
+            \AttributeTok{star.char =} \FunctionTok{c}\NormalTok{(}\StringTok{"*"}\NormalTok{, }\StringTok{"**"}\NormalTok{, }\StringTok{"***"}\NormalTok{),}
+            \AttributeTok{title=}\StringTok{"Effect of hearing status and vocabulary on Mel spectral distance"}\NormalTok{,  }
+            \AttributeTok{digits =} \DecValTok{2}\NormalTok{, }
+            \AttributeTok{ci =} \ConstantTok{TRUE}\NormalTok{, }
+            \AttributeTok{style =} \StringTok{"all"}\NormalTok{,}
+            \AttributeTok{order=}\FunctionTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{7}\NormalTok{),}
+            \AttributeTok{covariate.labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"EVT{-}2 score"}\NormalTok{, }\StringTok{"Chronological age matches"}\NormalTok{, }\StringTok{"Hearing age matches"}\NormalTok{, }\StringTok{"Child chronological age"}\NormalTok{, }\StringTok{"Word duration"}\NormalTok{,}
+                                 \StringTok{"EVT{-}2 score*Chrono age match"}\NormalTok{, }\StringTok{"EVT{-}2 score*Hearing age match"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## \begin{table}[!htbp] \centering 
+##   \caption{Effect of hearing status and vocabulary on Mel spectral distance} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  Intercept & 11.35$^{***}$ \\ 
+##   & (10.38, 12.32) \\ 
+##   & t = 22.89 \\ 
+##   & p = 0.00 \\ 
+##   EVT-2 score & 0.03$^{*}$ \\ 
+##   & (0.002, 0.05) \\ 
+##   & t = 2.13 \\ 
+##   & p = 0.04 \\ 
+##   Chronological age matches & 0.21 \\ 
+##   & ($-$0.93, 1.35) \\ 
+##   & t = 0.36 \\ 
+##   & p = 0.72 \\ 
+##   Hearing age matches & 0.45 \\ 
+##   & ($-$0.68, 1.59) \\ 
+##   & t = 0.79 \\ 
+##   & p = 0.44 \\ 
+##   Child chronological age & 0.003 \\ 
+##   & ($-$0.04, 0.05) \\ 
+##   & t = 0.15 \\ 
+##   & p = 0.89 \\ 
+##   Word duration & 1.97 \\ 
+##   & ($-$0.10, 4.04) \\ 
+##   & t = 1.86 \\ 
+##   & p = 0.07 \\ 
+##   EVT-2 score*Chrono age match & $-$0.004 \\ 
+##   & ($-$0.06, 0.05) \\ 
+##   & t = $-$0.14 \\ 
+##   & p = 0.89 \\ 
+##   EVT-2 score*Hearing age match & $-$0.04$^{*}$ \\ 
+##   & ($-$0.09, $-$0.005) \\ 
+##   & t = $-$2.19 \\ 
+##   & p = 0.03 \\ 
+##  \hline \\[-1.8ex] 
+## Observations & 1,134 \\ 
+## Log Likelihood & $-$3,016.76 \\ 
+## Akaike Inf. Crit. & 6,055.52 \\ 
+## Bayesian Inf. Crit. & 6,110.89 \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.05; $^{**}$p$<$0.01; $^{***}$p$<$0.001} \\ 
+## \end{tabular} 
+## \end{table}
+\end{verbatim}
+
+As before, we followed a forward-building model procedure to predict coarticulation within CV sequences with a baseline model containing random effects of \textbf{Speaker} and \textbf{Word} and fixed effects of \textbf{Word duration} and \textbf{Chronological Age}. As LENA recordings were only collected from the children with CIs and their hearing age matches, models with \textbf{Hourly Child Vocalization Count} only include those children. We did not find effects of \textbf{Articulation Skill} or \textbf{Minimal Pair Discrimination Ability}, or their interaction with hearing condition, upon children's coarticulation, so we excluded those variables from further analysis. For models with vocabulary size, the interaction of \textbf{Vocabulary Size} with \textbf{Hearing Status} improved upon the baseline model fit, indicating that the relationship between expressive vocabulary and coarticulation varied by hearing group (\ref{fig:vocab-by-coartic-plot}; model summary included in Appendices). There was a significant, positive relationship between expressive vocabulary and degree of coarticulation for the children with CIs (EVT-2 score: \(\beta\)=0.03, t=2.13, p=0.04), but no reliably significant effects of vocabulary on coarticulation for either NH group, perhaps due to the NH groups' limited vocabulary score ranges. We elaborate upon this possibility in the Discussion.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# LENA}
+\NormalTok{lena\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# }\AlertTok{TODO}\CommentTok{ missing one hearing age match child }
+  \FunctionTok{filter}\NormalTok{(CVC\_hourly}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only looking at HA matches and CIs}
+  \FunctionTok{filter}\NormalTok{(Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}665L52FS4\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}679L58MS6\textquotesingle{}} \SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}802E72FS3\textquotesingle{}} \SpecialCharTok{\&} \CommentTok{\# recorded 3+ months after testing}
+\NormalTok{           Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}806E42MS1\textquotesingle{}}\SpecialCharTok{\&}\NormalTok{ Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}809E64MS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(tp}\SpecialCharTok{!=}\StringTok{\textquotesingle{}3\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration=}\FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{lena\_model\_data}\SpecialCharTok{$}\NormalTok{EVT\_GSV\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(lena\_model\_data}\SpecialCharTok{$}\NormalTok{EVT\_GSV)}
+\NormalTok{lena\_model\_data}\SpecialCharTok{$}\NormalTok{CVC\_hourly\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(lena\_model\_data}\SpecialCharTok{$}\NormalTok{CVC\_hourly))}
+\NormalTok{lena\_model\_data}\SpecialCharTok{$}\NormalTok{CTC\_hourly\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(lena\_model\_data}\SpecialCharTok{$}\NormalTok{CTC\_hourly))}
+\NormalTok{lena\_model\_data}\SpecialCharTok{$}\NormalTok{AWC\_hourly\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(lena\_model\_data}\SpecialCharTok{$}\NormalTok{AWC\_hourly))}
+\NormalTok{lena\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(lena\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age)}
+
+\NormalTok{lenaI }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{lenaII }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered }\SpecialCharTok{+}
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         match }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(lenaI, lenaII) }\CommentTok{\# not sig }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## lenaI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## lenaI:     Speaker) + (1 | Word)
+## lenaII: euc_dist ~ CVC_hourly_centered + Chrono_age_centered + match + 
+## lenaII:     Word_duration + (1 | Speaker) + (1 | Word)
+##        npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## lenaI     7 3009.2 3039.5 -1497.6   2995.2                     
+## lenaII    8 3010.5 3045.1 -1497.3   2994.5 0.7163  1     0.3974
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lenaIII }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(lenaI, lenaIII) }\CommentTok{\# interaction doesn\textquotesingle{}t improve}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## lenaI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## lenaI:     Speaker) + (1 | Word)
+## lenaIII: euc_dist ~ CVC_hourly_centered * match + Chrono_age_centered + 
+## lenaIII:     Word_duration + (1 | Speaker) + (1 | Word)
+##         npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## lenaI      7 3009.2 3039.5 -1497.6   2995.2                     
+## lenaIII    9 3012.4 3051.2 -1497.2   2994.4 0.8814  2     0.6436
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# vocab*CVC}
+\NormalTok{lenaIV }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{lenaV }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered}\SpecialCharTok{*}\NormalTok{EVT\_GSV\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(lenaIV, lenaV) }\CommentTok{\# neither CVC or CTC improve upon vocab{-}only model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## lenaIV: euc_dist ~ EVT_GSV_centered * match + Chrono_age_centered + Word_duration + 
+## lenaIV:     (1 | Speaker) + (1 | Word)
+## lenaV: euc_dist ~ CVC_hourly_centered * EVT_GSV_centered * match + Chrono_age_centered + 
+## lenaV:     Word_duration + (1 | Speaker) + (1 | Word)
+##        npar    AIC    BIC  logLik deviance Chisq Df Pr(>Chisq)
+## lenaIV    9 3011.8 3050.7 -1496.9   2993.8                    
+## lenaV    13 3016.1 3072.2 -1495.0   2990.1  3.78  4     0.4366
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# no effect of vocalization count}
+
+\CommentTok{\# EXPLORATORY: let\textquotesingle{}s look at just the kids w/ NH}
+\NormalTok{lena\_HA }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.)  }\CommentTok{\# no effect }
+
+\CommentTok{\# let\textquotesingle{}s look at just the kids with CIs}
+\NormalTok{lena\_CI }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered }\SpecialCharTok{+} \CommentTok{\# exclude chrono age because correlated}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.)  }\CommentTok{\# no effect}
+
+\CommentTok{\# now let\textquotesingle{}s look at just the kids with CIs who have 3+ years of hearing experience (median hearing age = 36 months)}
+\NormalTok{lena\_CI2 }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Hearing\_age }\SpecialCharTok{\textgreater{}}\DecValTok{35}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered }\SpecialCharTok{+} \CommentTok{\# exclude chrono age because correlated}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{lena\_CI3 }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered}\SpecialCharTok{*}\NormalTok{Hearing\_age }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }\CommentTok{\# no effect when we code hearing age continuously }
+
+\CommentTok{\# do a model that includes all kids but with a variable that has them split}
+\NormalTok{split\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ha\_group=}\FunctionTok{if\_else}\NormalTok{(Hearing\_age }\SpecialCharTok{\textgreater{}} \DecValTok{35}\NormalTok{, }\StringTok{"older hearing age"}\NormalTok{, }\StringTok{"younger hearing age"}\NormalTok{))}
+
+\NormalTok{split\_model\_data}\SpecialCharTok{$}\NormalTok{ha\_group }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(split\_model\_data}\SpecialCharTok{$}\NormalTok{ha\_group, }\AttributeTok{ordered =} \ConstantTok{FALSE}\NormalTok{ )}
+\NormalTok{split\_model\_data}\SpecialCharTok{$}\NormalTok{ha\_group }\OtherTok{\textless{}{-}} \FunctionTok{relevel}\NormalTok{(split\_model\_data}\SpecialCharTok{$}\NormalTok{ha\_group, }\AttributeTok{ref =} \StringTok{"older hearing age"}\NormalTok{)}
+
+\NormalTok{lena\_CI3a }\OtherTok{\textless{}{-}}\NormalTok{ split\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ha\_group }\SpecialCharTok{+} \CommentTok{\# exclude chrono age because correlated}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\CommentTok{\# ***** final model *****}
+\NormalTok{lena\_CI4 }\OtherTok{\textless{}{-}}\NormalTok{ split\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ CVC\_hourly\_centered}\SpecialCharTok{*}\NormalTok{ha\_group }\SpecialCharTok{+} \CommentTok{\# exclude chrono age because correlated}
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(lena\_CI3a, lena\_CI4) }\CommentTok{\# improves under alpha}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## lena_CI3a: euc_dist ~ ha_group + Word_duration + (1 | Speaker) + (1 | Word)
+## lena_CI4: euc_dist ~ CVC_hourly_centered * ha_group + Word_duration + (1 | 
+## lena_CI4:     Speaker) + (1 | Word)
+##           npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+## lena_CI3a    6 1435.1 1456.8 -711.54   1423.1                       
+## lena_CI4     8 1433.8 1462.8 -708.91   1417.8 5.2469  2    0.07255 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cvc\_model }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(lena\_CI4)}
+
+
+\CommentTok{\# }\AlertTok{TODO}\CommentTok{: GFTA, perception, and vocab are not significant in models with CVC; fit models showing that those factors do not improve upon models}
+\CommentTok{\# with CVC*ha\_group}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Hourly Child Vocalization Count} from the LENA recordings did not improve upon the baseline model: there was no effect of daily speech practice upon the degree of coarticulation for children with CIs or their hearing age-matched peers. This null result was unexpected given the effect of child vocalization frequency upon coarticulatory development that we found in our previous work on four-year-olds with NH. For the children with NH in this study, we hypothesized that the null result could stem from the limited number of hearing age matches studied here or from the smaller range of hourly child vocalization frequency, a point that we return to in the Discussion.
+
+For the children with CIs, we hypothesized that there could be another source of the null result. We considered that for children with CIs, post-implantation it may take time to learn to incorporate auditory feedback into speech routines and as such, we might not see an effect of vocal output frequency upon speech production outcomes immediately or even several months after implantation. We explored this idea by performing a median split upon the children with CIs by their hearing age (median hearing age = 36 months). We then fit the model as before but with the interaction of the binary variable \textbf{Hearing Age Group} (\textless\textgreater35 months hearing experience) and \textbf{Hourly Child Vocalization Count}. (Note that the models with the \textbf{Hearing Age Group} parameter did not include \textbf{Chronological Age} as the parameters not independent.) While the \textbf{Hearing Age Group}*\textbf{Hourly Child Vocalization Count} interaction was not significant in the model, \textbf{Hourly Child Vocalization Count} was significant with the reference level ``\textgreater{} 35 months hearing experience'' (\(\beta\)=0.01, t=2.2, p=0.045), but not significant with the reference level ``\textless= 35 months hearing experience'', indicating that the effects of vocal output upon degree of coarticulation tend to appear in the children with more than three years hearing experience, but not children with less than three years experience.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# GFTA}
+\NormalTok{gfta\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(GFTA\_Standard}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# participants XX didn\textquotesingle{}t complete GFTA}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration =} \FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{gfta\_model\_data}\SpecialCharTok{$}\NormalTok{GFTA\_Standard\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(gfta\_model\_data}\SpecialCharTok{$}\NormalTok{GFTA\_Standard)}
+\NormalTok{gfta\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(gfta\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age) }
+
+\NormalTok{gftaI }\OtherTok{\textless{}{-}}\NormalTok{ gfta\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{gftaII }\OtherTok{\textless{}{-}}\NormalTok{ gfta\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GFTA\_Standard\_centered }\SpecialCharTok{+}
+\NormalTok{         match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(gftaI, gftaII) }\CommentTok{\# no improvement}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## gftaI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## gftaI:     Speaker) + (1 | Word)
+## gftaII: euc_dist ~ GFTA_Standard_centered + match + Chrono_age_centered + 
+## gftaII:     Word_duration + (1 | Speaker) + (1 | Word)
+##        npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## gftaI     8 5686.5 5726.3 -2835.3   5670.5                     
+## gftaII    9 5688.4 5733.2 -2835.2   5670.4 0.0771  1     0.7812
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gftaIII }\OtherTok{\textless{}{-}}\NormalTok{ gfta\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GFTA\_Standard\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(gftaI, gftaIII) }\CommentTok{\# no improvement}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## gftaI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## gftaI:     Speaker) + (1 | Word)
+## gftaIII: euc_dist ~ GFTA_Standard_centered * match + Chrono_age_centered + 
+## gftaIII:     Word_duration + (1 | Speaker) + (1 | Word)
+##         npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## gftaI      8 5686.5 5726.3 -2835.3   5670.5                     
+## gftaIII   11 5688.8 5743.6 -2833.4   5666.8 3.7015  3     0.2956
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gftaIV }\OtherTok{\textless{}{-}}\NormalTok{ gfta\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GFTA\_Standard\_centered }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\CommentTok{\# no effect of GFTA on overall coartic, no interaction with match, and no effect in models just w/ CI kids}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# min pair discrimination}
+\CommentTok{\# }\AlertTok{TODO}\CommentTok{: remove the kids who completed less than a third of trials (\textless{}10)}
+\CommentTok{\# note that the tp3 kids didn\textquotesingle{}t do the min pair task}
+\NormalTok{minpair\_model\_data }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(MinPair\_ProportionCorrect}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# }\AlertTok{TODO}\CommentTok{: check which participants didn\textquotesingle{}t complete this task}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# mostly don\textquotesingle{}t have data from them}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Word\_duration =} \FunctionTok{center\_scale}\NormalTok{(Word\_duration))}
+\NormalTok{minpair\_model\_data}\SpecialCharTok{$}\NormalTok{MinPair\_ProportionCorrect\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(minpair\_model\_data}\SpecialCharTok{$}\NormalTok{MinPair\_ProportionCorrect) }
+\NormalTok{minpair\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age\_centered }\OtherTok{\textless{}{-}} \FunctionTok{center\_scale}\NormalTok{(minpair\_model\_data}\SpecialCharTok{$}\NormalTok{Chrono\_age) }
+
+\NormalTok{minI }\OtherTok{\textless{}{-}}\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+
+\NormalTok{minII }\OtherTok{\textless{}{-}}\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ MinPair\_ProportionCorrect\_centered }\SpecialCharTok{+}
+\NormalTok{         match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(minI, minII)  }\CommentTok{\# no improvement}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## minI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## minI:     Speaker) + (1 | Word)
+## minII: euc_dist ~ MinPair_ProportionCorrect_centered + match + Chrono_age_centered + 
+## minII:     Word_duration + (1 | Speaker) + (1 | Word)
+##       npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## minI     7 3379.3 3410.5 -1682.6   3365.3                     
+## minII    8 3381.1 3416.8 -1682.6   3365.1 0.1515  1     0.6971
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{minIII }\OtherTok{\textless{}{-}}\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ MinPair\_ProportionCorrect\_centered}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{anova}\NormalTok{(minI, minIII)  }\CommentTok{\#  no interaction of perceptual experience with match}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: .
+## Models:
+## minI: euc_dist ~ match + Chrono_age_centered + Word_duration + (1 | 
+## minI:     Speaker) + (1 | Word)
+## minIII: euc_dist ~ MinPair_ProportionCorrect_centered * match + Chrono_age_centered + 
+## minIII:     Word_duration + (1 | Speaker) + (1 | Word)
+##        npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+## minI      7 3379.3 3410.5 -1682.6   3365.3                     
+## minIII    9 3381.9 3422.0 -1681.9   3363.9 1.4118  2     0.4937
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# let\textquotesingle{}s look at just the kids w/ CIs who we think there may be an effect of perceptual ability on}
+\NormalTok{minCI }\OtherTok{\textless{}{-}}\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ MinPair\_ProportionCorrect\_centered }\SpecialCharTok{+} 
+\NormalTok{         EVT\_GSV }\SpecialCharTok{+}
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\FunctionTok{summary}\NormalTok{(minCI)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+## lmerModLmerTest]
+## Formula: 
+## euc_dist ~ MinPair_ProportionCorrect_centered + EVT_GSV + Chrono_age_centered +  
+##     Word_duration + (1 | Speaker) + (1 | Word)
+##    Data: .
+## 
+## REML criterion at convergence: 1837
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.5924 -0.5218 -0.1518  0.3101  6.0121 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  Speaker  (Intercept) 0.1705   0.4129  
+##  Word     (Intercept) 0.7502   0.8661  
+##  Residual             9.1160   3.0193  
+## Number of obs: 359, groups:  Speaker, 26; Word, 14
+## 
+## Fixed effects:
+##                                      Estimate Std. Error         df t value
+## (Intercept)                          6.825216   1.199258  32.250296   5.691
+## MinPair_ProportionCorrect_centered  -1.141984   1.558458  20.381512  -0.733
+## EVT_GSV                              0.034306   0.009601  27.070500   3.573
+## Chrono_age_centered                  0.005725   0.023819  18.865122   0.240
+## Word_duration                        1.936397   1.885997 319.433596   1.027
+##                                    Pr(>|t|)    
+## (Intercept)                        2.59e-06 ***
+## MinPair_ProportionCorrect_centered  0.47205    
+## EVT_GSV                             0.00135 ** 
+## Chrono_age_centered                 0.81264    
+## Word_duration                       0.30533    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) MP_PC_ EVT_GS Chrn__
+## MnPr_PrprC_  0.506                     
+## EVT_GSV     -0.952 -0.441              
+## Chrn_g_cntr -0.118 -0.443 -0.067       
+## Word_duratn  0.000  0.000  0.000  0.000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# no effect of min discrim just in kids with CIs}
+
+\NormalTok{minIV }\OtherTok{\textless{}{-}}\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ MinPair\_ProportionCorrect\_centered}\SpecialCharTok{*}\NormalTok{EVT\_GSV }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\CommentTok{\# no effect of discrim ability dependent upon vocab}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocabIII }\OtherTok{\textless{}{-}}\NormalTok{ vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{lmer}\NormalTok{(euc\_dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ EVT\_GSV}\SpecialCharTok{*}\NormalTok{match }\SpecialCharTok{+} 
+\NormalTok{         Chrono\_age\_centered }\SpecialCharTok{+} 
+\NormalTok{         Word\_duration }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Speaker) }\SpecialCharTok{+} 
+\NormalTok{         (}\DecValTok{1}\SpecialCharTok{|}\NormalTok{Word), }
+       \AttributeTok{data=}\NormalTok{.) }
+\NormalTok{vocab\_model\_data}\SpecialCharTok{$}\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(vocabIII) }
+
+\CommentTok{\# write out the figure manually ot adjust panel size}
+\CommentTok{\#jpeg("/Users/megcychosz/Google Drive/CI\_feedback/analysis/results/2\_feedback\_results\_files/figure{-}latex/coartic{-}evt{-}large{-}panels.jpeg", height = 500, width = 750)}
+\NormalTok{vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, EVT\_GSV, match, poa) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{match=}\NormalTok{(}\FunctionTok{recode}\NormalTok{(match,}\StringTok{"Chrono\_age\_match"}\OtherTok{=}\StringTok{"Chronological }\SpecialCharTok{\textbackslash{}n}\StringTok{ age matches"}\NormalTok{,}
+                      \StringTok{"CI"}\OtherTok{=}\StringTok{"CIs"}\NormalTok{, }\StringTok{"HA\_match"}\OtherTok{=}\StringTok{"Hearing }\SpecialCharTok{\textbackslash{}n}\StringTok{ age matches"}\NormalTok{)),}
+         \AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{EVT\_GSV, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{20}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{size=}\DecValTok{2}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{2}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{shape=}\NormalTok{Phone, }\AttributeTok{fill=}\NormalTok{Phone)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_smooth}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill=}\NormalTok{Phone, }\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{lty=}\NormalTok{Phone)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{fit), }\AttributeTok{size=}\DecValTok{1}\NormalTok{,}\AttributeTok{color=}\StringTok{"grey30"}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# the actual model fit  }
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{match, }\AttributeTok{scales=}\StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Expressive vocabulary score (EVT{-}2)"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\#labs(col=\textquotesingle{}Place of articulation\textquotesingle{}) + }
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{20}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{12}\NormalTok{, }\AttributeTok{face=}\StringTok{"bold"}\NormalTok{), }
+      \AttributeTok{legend.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{11}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{13}\NormalTok{),}
+      \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(.}\DecValTok{43}\NormalTok{,.}\DecValTok{87}\NormalTok{),}
+      \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill=}\StringTok{"white"}\NormalTok{, }
+                                       \AttributeTok{size=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"solid"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{colour =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{override.aes =} \FunctionTok{list}\NormalTok{(}\AttributeTok{alpha =}\NormalTok{ .}\DecValTok{55}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/vocab-by-coartic-plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#dev.off()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{not-using}{%
+\section{not using}\label{not-using}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# split the CI kids on their vocab scores}
+\NormalTok{med\_evt }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(EVT\_GSV}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(match) \%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{med\_evt=}\FunctionTok{median}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(EVT\_GSV)))}
+
+\CommentTok{\# CIS}
+\NormalTok{CI\_evt}\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(EVT\_GSV}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{vocab\_group =} \FunctionTok{if\_else}\NormalTok{(EVT\_GSV }\SpecialCharTok{\textless{}} \DecValTok{127}\NormalTok{, }
+                            \StringTok{"Small vocab"}\NormalTok{, }
+                            \StringTok{"Large vocab"}\NormalTok{))}
+
+\NormalTok{ CI\_evt }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, CVC\_hourly, feedback\_experience, match, poa) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{MinPair\_ProportionCorrect, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{16}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\#geom\_boxplot(aes()) + }
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{) }\SpecialCharTok{+} 
+   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{vocab\_group) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Discrimination ability"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/med split vocab by coartic plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#665L52FS4 completed recording 6 months later 679L58MS6 completed recording 4 months alter}
+\CommentTok{\#802E72FS3 did it 4 months later; 806E42MS1 did it 3 months later}
+\CommentTok{\#809E64MS2 did LENA recording 4 months later}
+
+\NormalTok{lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+   \CommentTok{\#group\_by(Speaker, poa) \%\textgreater{}\% \# don\textquotesingle{}t need to group by match bc only ha matches}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \CommentTok{\#merge(., df.final3, by=c("Speaker", "poa")) \%\textgreater{}\%}
+  \FunctionTok{distinct\_at}\NormalTok{(., }\FunctionTok{vars}\NormalTok{(Speaker, poa), }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#mutate(match=(recode(match,"CI"="CIs", "HA\_match"="Hearing age matches")),}
+   \CommentTok{\#      Phone=poa,}
+    \CommentTok{\#     CVC\_hourly=as.numeric(CVC\_hourly)) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{CVC\_hourly, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{16}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# }\AlertTok{TODO}\CommentTok{ add a note saying that one outlier was removed}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{size=}\DecValTok{2}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{9}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{poa, }\AttributeTok{shape=}\NormalTok{poa)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{, }\AttributeTok{color=}\StringTok{\textquotesingle{}gray40\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{match) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"CVC"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/lena by coartic plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# perform a median split by CVC which is a proxy for auditory feedback experience and see if there is an effect on coartic}
+\NormalTok{med\_CVC }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(CVC\_hourly}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(match) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{med\_CVC=}\FunctionTok{median}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(CVC\_hourly)))}
+
+\CommentTok{\# CIS}
+\NormalTok{CI\_auditory }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(CVC\_hourly}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{feedback\_experience =} \FunctionTok{if\_else}\NormalTok{(CVC\_hourly }\SpecialCharTok{\textless{}} \DecValTok{256}\NormalTok{, }
+                            \StringTok{"Less auditory }\SpecialCharTok{\textbackslash{}n}\StringTok{ feedback group"}\NormalTok{, }
+                            \StringTok{"More auditory }\SpecialCharTok{\textbackslash{}n}\StringTok{ feedback group"}\NormalTok{))}
+\CommentTok{\# hearing age matches}
+\NormalTok{HA\_auditory }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}HA\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(CVC\_hourly}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{feedback\_experience =} \FunctionTok{if\_else}\NormalTok{(CVC\_hourly }\SpecialCharTok{\textless{}} \DecValTok{245}\NormalTok{, }
+                            \StringTok{"Less auditory }\SpecialCharTok{\textbackslash{}n}\StringTok{ feedback group"}\NormalTok{, }
+                            \StringTok{"More auditory }\SpecialCharTok{\textbackslash{}n}\StringTok{ feedback group"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rbind}\NormalTok{(., CI\_auditory)}
+
+
+\NormalTok{ HA\_auditory }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, CVC\_hourly, feedback\_experience, match, poa) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{match=}\NormalTok{(}\FunctionTok{recode}\NormalTok{(match,}\StringTok{"CI"}\OtherTok{=}\StringTok{"CIs"}\NormalTok{, }\StringTok{"HA\_match"}\OtherTok{=}\StringTok{"Hearing age matches"}\NormalTok{)),}
+         \AttributeTok{Phone=}\NormalTok{poa,}
+         \AttributeTok{CVC\_hourly=}\FunctionTok{as.numeric}\NormalTok{(CVC\_hourly)) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Hearing\_age, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{16}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# }\AlertTok{TODO}\CommentTok{ add a note saying that one outlier was removed}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{()) }\SpecialCharTok{+} 
+  \CommentTok{\#geom\_jitter() +}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{match) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Feedback experience"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/lena by coartic plot-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ gfta\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+   \CommentTok{\#distinct(Speaker, .keep\_all = T) \%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, match, poa, MinPair\_ProportionCorrect) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{GFTA\_Standard, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \CommentTok{\#ylim(5,16) + }
+  \CommentTok{\#geom\_boxplot(aes()) + }
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{) }\SpecialCharTok{+} 
+   \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{size=}\DecValTok{1}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{match) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"GFTA score"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/gfta by coartic plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# split the CI kids on their GFTA scores}
+\CommentTok{\# absolutely no coartic difference based on GFTA scores}
+\NormalTok{med\_gfta }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(GFTA\_Standard}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(match) \%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{med\_gfta=}\FunctionTok{median}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(GFTA\_Standard)))}
+
+\CommentTok{\# CIS}
+\NormalTok{CI\_gfta}\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(GFTA\_Standard}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{gfta\_group =} \FunctionTok{if\_else}\NormalTok{(GFTA\_Standard }\SpecialCharTok{\textless{}} \DecValTok{72}\NormalTok{, }
+                            \StringTok{"Bad artic"}\NormalTok{, }
+                            \StringTok{"Good artic"}\NormalTok{))}
+
+\NormalTok{ CI\_gfta }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, CVC\_hourly, feedback\_experience, match, poa) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{gfta\_group, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{16}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{()) }\SpecialCharTok{+} 
+  \CommentTok{\#geom\_jitter() +}
+  \CommentTok{\#facet\_wrap(\textasciitilde{}match) +}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"GFTA group"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/gfta by coartic plot: split-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ minpair\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Chrono\_age\_match\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# no data from this group}
+   \CommentTok{\#distinct(Speaker, .keep\_all = T) \%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, match, poa, MinPair\_ProportionCorrect) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{MinPair\_ProportionCorrect, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \CommentTok{\#ylim(5,16) + }
+  \CommentTok{\#geom\_boxplot(aes()) + }
+  \FunctionTok{geom\_smooth}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{Phone),}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{) }\SpecialCharTok{+} 
+   \FunctionTok{geom\_jitter}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{Phone),}\AttributeTok{size=}\DecValTok{1}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{match) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Proportion correct on minimal }\SpecialCharTok{\textbackslash{}n}\StringTok{ pair discrimination task"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/minpair by coartic plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# split the CI kids on their minpair discrim scores}
+\NormalTok{med\_min\_pair }\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(MinPair\_ProportionCorrect}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Speaker}\SpecialCharTok{!=}\StringTok{\textquotesingle{}304E48FS2\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# this kid listened to less than 10 trials}
+  \CommentTok{\#group\_by(match) \%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{med\_min\_pair=}\FunctionTok{median}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(MinPair\_ProportionCorrect)))}
+
+\CommentTok{\# CIS}
+\NormalTok{CI\_min\_pair}\OtherTok{\textless{}{-}}\NormalTok{ df.final3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(MinPair\_ProportionCorrect}\SpecialCharTok{!=}\StringTok{\textquotesingle{}NA\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{min\_pair\_group =} \FunctionTok{if\_else}\NormalTok{(MinPair\_ProportionCorrect }\SpecialCharTok{\textless{}}\NormalTok{ .}\DecValTok{667}\NormalTok{, }
+                            \StringTok{"Low discrim"}\NormalTok{, }
+                            \StringTok{"High discrim"}\NormalTok{))}
+
+\NormalTok{ CI\_min\_pair }\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, match, poa, MinPair\_ProportionCorrect) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{MinPair\_ProportionCorrect, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \CommentTok{\#ylim(5,16) + }
+  \CommentTok{\#geom\_boxplot(aes()) + }
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{) }\SpecialCharTok{+} 
+   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{min\_pair\_group) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Discrim ability"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/minpair by coartic plot: split-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{med\_ha }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(match) \%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{med\_ha=}\FunctionTok{median}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(Hearing\_age)))}
+
+\CommentTok{\# CIS}
+\NormalTok{CI\_ha }\OtherTok{\textless{}{-}}\NormalTok{ lena\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(hearing\_status}\SpecialCharTok{==}\StringTok{\textquotesingle{}CI\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ha\_group =} \FunctionTok{if\_else}\NormalTok{(Hearing\_age }\SpecialCharTok{\textless{}} \DecValTok{36}\NormalTok{, }
+                            \StringTok{"Little experience"}\NormalTok{, }
+                            \StringTok{"More experience"}\NormalTok{))}
+
+\NormalTok{CI\_ha }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Speaker, CVC\_hourly, ha\_group, poa) }\SpecialCharTok{\%\textgreater{}\%}
+ \CommentTok{\# summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#filter(match==\textquotesingle{}CIs\textquotesingle{}) \%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{CVC\_hourly, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{16}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\#geom\_boxplot(aes()) + }
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method=}\StringTok{"lm"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{shape=}\NormalTok{Phone,}\AttributeTok{color=}\NormalTok{Phone)) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ha\_group) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"CVC"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Median Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{17}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{10}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/lena by coartic plot: split-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocab\_model\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#group\_by(Speaker, EVT\_GSV, match, poa) \%\textgreater{}\%}
+  \CommentTok{\#summarize(median\_euc\_dist = median(euc\_dist)) \%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{match=}\NormalTok{(}\FunctionTok{recode}\NormalTok{(match,}\StringTok{"Chrono\_age\_match"}\OtherTok{=}\StringTok{"Chronological }\SpecialCharTok{\textbackslash{}n}\StringTok{ age matches"}\NormalTok{,}
+                      \StringTok{"CI"}\OtherTok{=}\StringTok{"CIs"}\NormalTok{, }\StringTok{"HA\_match"}\OtherTok{=}\StringTok{"Hearing }\SpecialCharTok{\textbackslash{}n}\StringTok{ age matches"}\NormalTok{)),}
+         \AttributeTok{Phone=}\NormalTok{poa) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(match}\SpecialCharTok{!=}\StringTok{\textquotesingle{}CIs\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{med\_euc\_dist =} \FunctionTok{median}\NormalTok{(euc\_dist)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Speaker, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(EVT\_GSV}\SpecialCharTok{\textgreater{}}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(., }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{EVT\_GSV, }\AttributeTok{y=}\NormalTok{euc\_dist)) }\SpecialCharTok{+} 
+  \FunctionTok{ylim}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{20}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size=}\FloatTok{1.2}\NormalTok{, }\AttributeTok{alpha=}\NormalTok{.}\DecValTok{8}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color=}\NormalTok{Phone, }\AttributeTok{shape=}\NormalTok{Phone, }\AttributeTok{fill=}\NormalTok{Phone)) }\SpecialCharTok{+} 
+  \CommentTok{\#facet\_wrap(\textasciitilde{}Speaker, scales="free") +}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill=}\NormalTok{Phone),}\AttributeTok{method=}\StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Expressive vocabulary score (EVT{-}2)"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Mel spectral }\SpecialCharTok{\textbackslash{}n}\StringTok{ distance between phones"}\NormalTok{) }\CommentTok{\#+ }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2a_feedback_coartic_results_files/figure-latex/individual vocab by coartic plot-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{\#labs(col=\textquotesingle{}Place of articulation\textquotesingle{}) + }
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{15}\NormalTok{),}
+      \AttributeTok{axis.title=}\FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{20}\NormalTok{,}\AttributeTok{face=}\StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{12}\NormalTok{, }\AttributeTok{face=}\StringTok{"bold"}\NormalTok{), }
+      \AttributeTok{legend.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{11}\NormalTok{),}
+      \AttributeTok{strip.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size=}\DecValTok{13}\NormalTok{),}
+      \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(.}\DecValTok{43}\NormalTok{,.}\DecValTok{87}\NormalTok{),}
+      \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill=}\StringTok{"white"}\NormalTok{, }
+                                       \AttributeTok{size=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{linetype=}\StringTok{"solid"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{colour =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{override.aes =} \FunctionTok{list}\NormalTok{(}\AttributeTok{alpha =}\NormalTok{ .}\DecValTok{55}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 8
+##  $ axis.title       :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : chr "bold"
+##   ..$ colour       : NULL
+##   ..$ size         : num 20
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text        :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : num 15
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.background:List of 5
+##   ..$ fill         : chr "white"
+##   ..$ colour       : NULL
+##   ..$ size         : num 0.5
+##   ..$ linetype     : chr "solid"
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ legend.text      :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : num 11
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.title     :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : chr "bold"
+##   ..$ colour       : NULL
+##   ..$ size         : num 12
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.position  : num [1:2] 0.43 0.87
+##  $ strip.text.x     :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : num 13
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ colour           :List of 21
+##   ..$ title         : list()
+##   .. ..- attr(*, "class")= chr "waiver"
+##   ..$ title.position: NULL
+##   ..$ title.theme   : NULL
+##   ..$ title.hjust   : NULL
+##   ..$ title.vjust   : NULL
+##   ..$ label         : logi TRUE
+##   ..$ label.position: NULL
+##   ..$ label.theme   : NULL
+##   ..$ label.hjust   : NULL
+##   ..$ label.vjust   : NULL
+##   ..$ keywidth      : NULL
+##   ..$ keyheight     : NULL
+##   ..$ direction     : NULL
+##   ..$ override.aes  :List of 1
+##   .. ..$ alpha: num 0.55
+##   ..$ nrow          : NULL
+##   ..$ ncol          : NULL
+##   ..$ byrow         : logi FALSE
+##   ..$ reverse       : logi FALSE
+##   ..$ order         : num 0
+##   ..$ available_aes : chr "any"
+##   ..$ name          : chr "legend"
+##   ..- attr(*, "class")= chr [1:2] "guide" "legend"
+##  - attr(*, "class")= chr [1:2] "theme" "gg"
+##  - attr(*, "complete")= logi FALSE
+##  - attr(*, "validate")= logi TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{\#mutate(environment=paste(poa,backness)) \%\textgreater{}\%}
+  \CommentTok{\#mutate(environment=recode(environment, "alveolar back"="su", "alveolar front" = "si", "postalveolar back" = "SHu", "postalveolar front" = "SHi")) \#\%\textgreater{}\%}
+ \CommentTok{\# filter(Word==\textquotesingle{}scissors\textquotesingle{} | Word==\textquotesingle{}sheep\textquotesingle{} | Word==\textquotesingle{}ship\textquotesingle{} | Word==\textquotesingle{}shell\textquotesingle{} | Word==\textquotesingle{}shoe\textquotesingle{} | Word==\textquotesingle{}shoulder\textquotesingle{} | Word==\textquotesingle{}shovel\textquotesingle{} | Word==\textquotesingle{}sink\textquotesingle{} | Word==\textquotesingle{}sick\textquotesingle{} | Word==\textquotesingle{}sister\textquotesingle{} | Word==\textquotesingle{}soap\textquotesingle{} | Word==\textquotesingle{}soup\textquotesingle{} | Word==\textquotesingle{}suitcase\textquotesingle{})}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

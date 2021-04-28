@@ -1,0 +1,44 @@
+---
+title: "CI_feedback appendices"
+author: "Meg Cychosz"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  bookdown::pdf_document2:
+    keep_tex: true
+    toc: False
+indent: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, 
+                      warning=FALSE,
+                      echo=TRUE,
+                      cache=FALSE)
+```
+
+```{r, load packages}
+library('dplyr')
+library('tidyr')
+library('kableExtra')
+library('knitr')
+```
+
+```{r}
+demo_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/final_matched_children_edited.csv") # hearing status info, etc.
+```
+
+```{r}
+audio_info_tbl <- demo_data %>%
+  filter(hearing_status=='CI') %>%
+  select(Speaker, Chrono_age,age_at_hearing_loss, age_at_activation, etiology, device_formation, activation_order)
+
+kable(audio_info_tbl,
+      caption = "Audiological information from children with CIs",
+             booktabs=T,
+             col.names = c("Participant", "Chronological age", "Age at hearing loss",
+                           "Age at CI activation", "Etiology", "Device configuration",
+                           "Activation")) %>% 
+  kable_styling() 
+```
+
+
