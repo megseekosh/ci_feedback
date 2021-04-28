@@ -1,0 +1,1478 @@
+---
+title: "CI_feedback_coartic"
+author: "Meg Cychosz"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  bookdown::pdf_document2:
+    keep_tex: true
+    toc: False
+indent: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, 
+                      warning=FALSE,
+                      echo=TRUE,
+                      cache=FALSE)
+```
+
+```{r, load packages}
+library('dplyr')
+library('tidyr')
+library('stringr')
+library('purrr')
+library('ggplot2')
+library('lme4')
+library('lmerTest')
+library('stargazer')
+library('kableExtra')
+```
+
+```{r, load in data}
+# acoustic measures
+data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/production_data/RealWordRep_809E64MS2.CI_mel_spectrum.csv")
+demo_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/final_matched_children_edited.csv") # hearing status info, etc.
+
+# test data
+tp1_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/tp1_test_data.csv") # GFTA, vocab, etc. for TP1
+tp3_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/participantinfo_tp3.csv") # GFTA, vocab, etc. for TP3
+some_CI_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/UW_UMNCrossSectionalCochlearImplantV1DatesScores.csv") # vocab scores for CIs
+CI_gfta_min <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/ParticipantInfo_CIV1.csv") #  GFTA scores and min pair scores for CIs
+
+# LENA data
+tp1_lena_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/TimePoint1_LENA_hourly.csv") # LENA for TP1; not collected at TP3
+CI_lena_data1 <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/CochlearV1_hourly.csv") #LENA
+
+# merge the test datasets together
+CI_test_data <- CI_gfta_min %>%
+  select(ResearchID, MinPair_ProportionCorrect, GFTA_Age,
+         GFTA_RawCorrect, GFTA_NumTranscribed, GFTA_AdjCorrect, GFTA_Standard) %>%
+  merge(., some_CI_test_data, by="ResearchID")
+
+# some cleaning 
+data2 <- data %>%
+  filter(Filename!='RealWordRep_638L28MS1_ML.WAV') %>% #remove 638 (HA match) because he repeated less than 50% of the words
+  mutate(Speaker=gsub("\\..*","",Speaker), # create speaker category
+         Speaker=gsub('_[^_]*$', '', Speaker),
+         CV_dur=phone_t1+phone_t2) 
+
+# merge with demographic and testing (GFTA/vocab) datasets
+tp3_test_data_vars <- tp3_test_data %>% select(ParticipantIDLong, LateTalker, AAE, EVT_Raw, EVT_GSV, 
+                                               EVT_Standard, PPVT_Raw, PPVT_GSV, PPVT_Standard, GFTA_RawCorrect, 
+                                               GFTA_NumTranscribed, GFTA_Standard, GFTA_AdjCorrect, GFTA_Age,
+                                               MinPair_ProportionCorrect)
+CI_test_data_vars <- CI_test_data %>% select(Speaker, LateTalker, AAE, EVT_Raw, EVT_Standard, EVT_GSV, 
+                                             PPVT_GSV, PPVT_Raw, PPVT_Standard, GFTA_RawCorrect, 
+                                             GFTA_NumTranscribed, GFTA_AdjCorrect, GFTA_Standard, GFTA_Age,
+                                             MinPair_ProportionCorrect)
+
+data3 <- tp1_test_data %>%
+  mutate(MinPair_ProportionCorrect = MinPairT1) %>%
+  select(ParticipantIDLong, EVT_Standard, 
+         EVT_Raw, EVT_GSV, PPVT_Standard, PPVT_Raw, 
+         PPVT_GSV, LateTalker, AAE, 
+         GFTA_Age, GFTA_Standard, GFTA_NumTranscribed,
+         GFTA_RawCorrect, GFTA_AdjCorrect,
+         MinPair_ProportionCorrect) %>%
+  rbind(., tp3_test_data_vars) %>% 
+  mutate(Speaker=ParticipantIDLong) %>%
+  select(-ParticipantIDLong) %>%
+  rbind(., CI_test_data_vars) %>%
+  merge(., demo_data, by=c('Speaker')) %>%
+  merge(., data2, by=c('Speaker'))
+
+# create a variable to note which children with CIs have which matches
+data4 <- data3 %>%
+  mutate(condition = if_else(Speaker=="300E57MS2" | Hearing_age < 11, "chrono_only",
+                             if_else(Speaker=="307E44MS1", "hearing_age_only",
+                                     ifelse(hearing_status=='NH', "NH",
+                                     "hearing_age_chrono")))) # all other children with CIs are matched to both conditions
+
+# how many children with NH are late talkers?
+# one child contributed at tp1 and tp3, n=4
+late <- data4 %>%
+  distinct(Speaker, .keep_all = T) %>%
+  filter(LateTalker=='1') 
+
+# are the late talkers within normal EVT ranges?
+late_vocab <- data4 %>%
+  distinct(Speaker, .keep_all = T) %>%
+  filter(LateTalker=='1') %>%
+  select(EVT_GSV, Speaker)
+
+# are the late talkers within normal GFTA ranges?
+late_gfta <- data4 %>%
+  distinct(Speaker, .keep_all = T) %>%
+  filter(LateTalker=='1') %>%
+  select(GFTA_Standard, Speaker)
+
+# how many children are received the task in AAE?
+# same child at tp1 and tp3, so n=1
+aae <- data4 %>%
+  distinct(Speaker, .keep_all = T) %>%
+  filter(AAE=='1') 
+
+```
+
+```{r, merge w LENA datasets}
+# recordings are excluded (or weren't collected) from 14 total children from the kids w/ CIs and hearing age matches 
+# calculate hourly estimates 
+lena_hourly <- tp1_lena_data %>% # remember we don't have LENA data for TP3
+  rbind(., CI_lena_data1) %>%
+  group_by(Subject) %>%
+  mutate(recording_length_hours=sum(Duration)/3600,
+         AWC_hourly = (sum(AWC_Actual)/recording_length_hours),
+         CVC_hourly = (sum(CVC_Actual)/recording_length_hours),
+         CTC_hourly = (sum(CTC_Actual)/recording_length_hours)) %>%
+  distinct(Subject, .keep_all = T) %>%
+  select(AWC_hourly, CVC_hourly, CTC_hourly, Subject, recording_length_hours) %>%
+  filter(Subject!='006L' | Subject!='026L' & Subject!='076L' &
+           Subject!='122L' & Subject!='655L' & Subject!='657L') # remove the 6 hearing age matches that are from tp3; the lena data are from tp1 for them
+
+no_lena <- data4 %>% 
+  filter(match=='Chrono_age_match' | tp=='3' | Speaker =='800E65MS2') %>% # get chrono matches,  the 6 hearing age matches that are from tp3, and the one CI child who didn't do a recording 
+  mutate(AWC_hourly=NA,
+         CVC_hourly=NA,
+         CTC_hourly=NA,
+         recording_length_hours=NA,
+         preSubject=gsub("(L).*","\\1",Speaker),
+         Subject=gsub("(A).*","\\1",preSubject))
+
+data_w_lena <- data4 %>%
+  filter(match!='Chrono_age_match') %>%
+  filter(tp!='3') %>% 
+  filter(Speaker !='800E65MS2') %>% # don't have LENA data from TP3, one CI child
+  mutate(preSubject=gsub("(L).*","\\1",Speaker),
+         Subject=gsub("E.*","",preSubject)) %>%
+  merge(., lena_hourly, by='Subject') %>%
+  rbind(., no_lena) # recombine with tp3 data
+
+check <- data_w_lena %>% # sanity check: there should be 28 children w/ CIs, 27 chrono age matches, and 24 hearing age matches
+  distinct_at(., vars(Speaker, match), .keep_all = T) %>% 
+  group_by(match) %>% 
+  count()
+
+# write out stats; this dataset will remove all of the tp3 children, chrono age matches, children who didn't complete a recording, and children who recorded after testing
+# final lena dataset should include 20 children w/ CIs and 17 hearing age matches 
+descrip_lena_stats <- data_w_lena %>% 
+   filter(Speaker!='665L52FS4' & Speaker!='679L58MS6' & Speaker!='802E72FS3' & # remove children who recorded 3+ months after testing
+           Speaker!='806E42MS1'& Speaker!='809E64MS2') %>%
+  distinct_at(., vars(Speaker, match), .keep_all = TRUE) %>%
+  filter(match!='Chrono_age_match') %>%
+  filter(recording_length_hours != 'NA') %>%
+  group_by(match) %>%
+  summarize(avg_recording_length=round(mean(recording_length_hours),2),
+            sd_recording_length=round(sd(recording_length_hours),2),
+            range_recording_length=paste(round(min(recording_length_hours),2),"-",max(recording_length_hours)))
+
+
+```
+
+```{r, descrip lena stats table}
+knitr::kable(descrip_lena_stats, caption = 'LENA recording length stats', 
+             booktabs=T,
+             col.names = c("match", "mean", "sd", "range")) %>% 
+  kable_styling()
+```
+
+```{r, get stats on children who completed lena}
+# what were the ages of the children with NH (HA matches) who completed recordings? 
+descrip_nh_lena_stats <- data_w_lena %>% 
+   filter(Speaker!='665L52FS4' & Speaker!='679L58MS6' & Speaker!='802E72FS3' & # remove children who recorded 3+ months after testing
+           Speaker!='806E42MS1'& Speaker!='809E64MS2') %>%
+  distinct_at(., vars(Speaker, match), .keep_all = TRUE) %>%
+  filter(match=='HA_match') %>% # only ha matches
+  filter(recording_length_hours != 'NA') %>% # remove ha matches we don't have recordings from; sanity check there should be n=17 HA matches who completed recordings
+  summarize(mean_age = mean(Chrono_age),
+            sd_age = sd(Chrono_age))
+
+```
+
+```{r, write out data}
+# write out data with demographics for vowel analysis
+write.csv(data_w_lena, '/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/coartic_w_lena.csv')
+
+```
+
+```{r, create manner variable}
+data6 <- data_w_lena %>%
+  mutate(manner = recode(Word,"sad"="fricative","chair"="affricate","cheese"="affricate",
+                       "chicken"="affricate","rabbit"="approximant","rain"="approximant",
+                       "rainbow"="approximant","raisins"="approximant","reading"="approximant",
+                       "red"="approximant","rock"="approximant","rocking"="approximant",
+                       "running"="approximant","sad"="fricative","sandbox"="fricative",
+                       "sandwich"="fricative","scissors"="fricative","share"="fricative",
+                       "sharing"="fricative","sheep"="fricative","shell"="fricative",
+                       "ship"="fricative","shoe"="fricative","shoes"="fricative",
+                       "shorts"="fricative","shoulder"="fricative","shovel"="fricative",
+                             "shower"="fricative","sick"="fricative","sidewalk"="fricative",
+                             "sink"="fricative","sister"="fricative","soap"="fricative",
+                             "sock"="fricative","soup"="fricative","suitcase"="fricative",
+                             "sun"="fricative","sunny"="fricative","walk"="approximant",
+                             "washer"="approximant","watch"="approximant","water"="approximant",
+                        "web"="approximant","wet"="approximant","wheel"="approximant",
+                             "wind"="approximant","window"="approximant", "waiting"="approximant"),
+         poa = recode(Word, "sad"="alveolar","chair"="alveopalatal","cheese"="alveopalatal",
+                       "chicken"="alveopalatal","rabbit"="rhotic","rain"="rhotic",
+                       "rainbow"="rhotic","raisins"="rhotic","reading"="rhotic",
+                       "red"="rhotic","rock"="rhotic","rocking"="rhotic",
+                       "running"="rhotic","sad"="alveolar","sandbox"="alveolar",
+                       "sandwich"="alveolar","scissors"="alveolar","share"="postalveolar",
+                       "sharing"="postalveolar","sheep"="postalveolar","shell"="postalveolar",
+                       "ship"="postalveolar","shoe"="postalveolar","shoes"="postalveolar",
+                       "shorts"="postalveolar","shoulder"="postalveolar","shovel"="postalveolar",
+                             "shower"="postalveolar","sick"="alveolar","sidewalk"="alveolar",
+                             "sink"="alveolar","sister"="alveolar","soap"="alveolar",
+                             "sock"="alveolar","soup"="alveolar","suitcase"="alveolar",
+                             "sun"="alveolar","sunny"="alveolar","walk"="labiovelar",
+                             "washer"="labiovelar","watch"="labiovelar","water"="labiovelar",
+                        "web"="labiovelar","wet"="labiovelar","wheel"="labiovelar",
+                             "wind"="labiovelar","window"="labiovelar", "waiting"="labiovelar"),
+        backness = recode(Word, "sad"="front","chair"="rhotic","cheese"="front",
+                       "chicken"="front","rabbit"="front","rain"="front",
+                       "rainbow"="front","raisins"="front","reading"="front",
+                       "red"="front","rock"="back","rocking"="back",
+                       "running"="back","sad"="front","sandbox"="front",
+                       "sandwich"="front","scissors"="front","share"="front",
+                       "sharing"="front","sheep"="front","shell"="front",
+                       "ship"="front","shoe"="back","shoes"="back",
+                       "shorts"="back","shoulder"="back","shovel"="back",
+                             "shower"="diphthong","sick"="front","sidewalk"="diphthong",
+                             "sink"="front","sister"="front","soap"="back",
+                             "sock"="back","soup"="back","suitcase"="back",
+                             "sun"="back","sunny"="back","walk"="back",
+                             "washer"="back","watch"="back","water"="back",
+                        "web"="front","wet"="front","wheel"="front",
+                             "wind"="front","window"="front", "waiting"="front"))
+         
+```
+
+# demographic details for methods
+```{r, age, condition, gender}
+# num of unique children in each condition
+child_cts <- demo_data %>% 
+  mutate(preSubject=gsub("(L).*","\\1",Speaker)) %>%
+  distinct(preSubject, .keep_all = T) %>%
+  group_by(hearing_status) %>% 
+  count() 
+print(paste('# of unique children:', sum(child_cts$n))) # two children contributed data from the same timepoint for the HA and CA conditions, 6 children contributed tp1 and tp3 data
+
+CI_child <- child_cts %>%
+  filter(hearing_status=='CI')
+print(paste('# of children with CIs:', CI_child$n))
+
+NH_child <- child_cts %>%
+  filter(hearing_status!='CI')
+print(paste('# of *unique* children with NH:', sum(NH_child$n)))
+
+# gender distribution of unique children with NH
+NH_gender <- demo_data %>%
+  filter(hearing_status!='CI') %>%
+  mutate(preSubject=gsub("(L).*","\\1",Speaker)) %>%
+  distinct(preSubject, .keep_all = T) %>%
+  group_by(Gender) %>%
+  count()
+
+
+# device formation
+CI_device <- demo_data %>%
+  filter(match=='CI') %>%
+  group_by(device_formation) %>%
+  count()
+
+CI_implant_age <- demo_data %>%
+  filter(match=='CI') %>%
+  summarize(avg_implant_age = mean(age_at_activation),
+            sd_implant_age = sd(age_at_activation),
+            min_implant_age = min(age_at_activation),
+            max_implant_age = max(age_at_activation))
+print(paste('avg age at implantation:', round(CI_implant_age$avg_implant_age,2)))
+print(paste('sd:', round(CI_implant_age$sd_implant_age,2)))
+print(paste('range:', round(CI_implant_age$min_implant_age,2),'-',round(CI_implant_age$max_implant_age,2),'months'))
+
+# gender distribution
+CI_gender <- demo_data %>% 
+  filter(match=='CI') %>%
+  group_by(Gender) %>%
+  count()
+
+
+# including the children grouped under *both* HA and chrono age matches; these are the actual #s of children in each condition
+dup_child_cts <- demo_data %>%
+  group_by(match) %>%
+  count()
+
+chrono_child <- dup_child_cts %>%
+  filter(match=='Chrono_age_match')
+print(paste('# of chronological age matches, including duplicate children:', chrono_child$n))
+
+ha_child <- dup_child_cts %>%
+    filter(match=='HA_match')
+print(paste('# of hearing age matches, including duplicate children:', ha_child$n))
+
+# and their genders
+chrono_child_gender <- demo_data %>%
+  filter(match=='Chrono_age_match') %>%
+  group_by(Gender) %>%
+  count()
+
+ha_child_gender <- demo_data %>%
+  filter(match=='HA_match') %>%
+  group_by(Gender) %>%
+  count()
+
+```
+
+```{r, age and SES stats}
+# age & SES stats
+# do this separately for the two conditions because some kids were excluded 
+# from one condition (hearing age too young) but not the other condition
+ha_stats <- demo_data %>%
+  filter(Hearing_age > 11 & Speaker != '300E57MS2') %>% # remove the 3 children who weren't matched
+  group_by(match) %>% 
+  filter(match != 'Chrono_age_match') %>%
+  summarize(mean_ha = mean(Hearing_age),
+            sd_ha = sd(Hearing_age),
+            range_ha = paste(min(Hearing_age), ',', max(Hearing_age)),
+            mean_mat_ed = mean(Mat_ed),
+            sd_mat_ed = round(sd(Mat_ed),2))
+
+chrono_stats <- demo_data %>%
+  filter(Speaker != '307E44MS1') %>%# remove the child that wasn't matched
+  group_by(match) %>% 
+  filter(match != 'HA_match') %>%
+  summarize(mean_chrono = mean(Chrono_age),
+            sd_chrono = sd(Chrono_age),
+            range_chrono = paste(min(Chrono_age), ',', max(Chrono_age)),
+            mean_mat_ed = mean(Mat_ed),
+            sd_mat_ed = round(sd(Mat_ed),2))
+```
+
+# write out data for vowel analysis
+```{r}
+# TODO : write out demographic data to analyze vowels separately
+```
+
+# data pre-processing coarticulation
+```{r, select only target words}
+# select only word-initial CV sequences
+data7 <- data6 %>%
+  filter(Word !='') %>%# remove empty annotations
+  mutate(var = paste(Word,Previous)) %>%
+  filter(var != 'sister IH1' & var!='shorts T' 
+         & var!='shorts OW1' & var!='shower AW1'
+         & var!='suitcase K' & var!='suitcase EY1'
+         & var!='sidewalk D' & var!='washer AH1' 
+         & var!='sandwich D' & var!='sandwich IH2'
+         & var!='sharing EY1' & var!='chair AY1'
+         & var!='sandbox K' & var!='share AY1'
+         & var!='watch AH1' & var!='suitcase EY2'
+         & var!='chair EY1')
+
+# for coartic analysis, select only the words that were repeated at all timepoints 
+subdata <- data7 %>%
+  filter(Word=='sandwich' | Word=='scissors' | Word=='share' | 
+           Word=='sharing' | Word=='sheep' | Word=='shoe' | Word=='shoes' | 
+           Word=='shorts' | Word=='shovel' | Word=='shower' | Word=='sick' | 
+           Word=='sink' | Word=='soup' |
+         Word=='sun')
+```
+
+```{r, remove unusable words}
+subdata2 <- subdata %>%
+  filter(Analysis!='DONTUSE') %>% # remove words unable to segment
+  filter(Repetition=='1' | 
+           (Repetition==2 & Analysis=='USE') | 
+           (Repetition==3 & Analysis=='USE')) %>% # only use second/third repetitions when marked to do so
+  filter(Analysis!='VOWELONLY' & Analysis!='VowelOnly') # remove words marked to only do vowel analysis on
+
+# get some summary stats on words removed; only reflects words removed from both coartic and vowel analyses
+rmvd_stats <- subdata %>%
+  group_by(match) %>%
+  mutate(total_words = n()) %>%
+  filter(Analysis!='DONTUSE') %>% # remove words unable to segment
+  filter(Repetition=='1' | 
+           (Repetition==2 & Analysis=='USE') | 
+           (Repetition==3 & Analysis=='USE')) %>% # only use second/third repetitions when marked to do so
+  group_by(match) %>%
+  summarize(percen_used = (n()/total_words)*100) %>%
+  distinct()
+```
+
+```{r, calculate degree of coarticulation, warning=FALSE}
+# convert structure of spectral measurements at edges to something computable
+# remove brackets
+subdata2$Spectrum <- gsub( ']', '', subdata2$Spectrum)
+subdata2$Spectrum <- gsub( '[ ', '', subdata2$Spectrum, fixed = TRUE) # open bracket denotes regex so fix it
+
+# convert measurements to string
+subdata2$variable_sep <- str_extract_all(subdata2$Spectrum, "[-0-9\\.]+")
+
+# for euclidean distance and raw distance, convert to numeric: 
+subdata2$spec_vector <- lapply(subdata2$variable_sep , FUN = as.numeric)
+subdata2 <- as.data.frame(subdata2)
+
+
+# --------- option to find raw difference/euclidean between vectors --------
+if(any(grepl("package:plyr", search()))) detach("package:plyr") else message("plyr not loaded")
+library('dplyr')
+
+
+# calculate raw difference (sanity check) and euc distance between vectors
+diff_df <- subdata2 %>% 
+  group_by(Speaker, match, Word, Word_duration) %>% # IMPORTANT: always group by Speaker + match b/c two participants contributed the same recording(HA and chrono matched)
+  #mutate(raw_diff = map2(spec_vector, lead(spec_vector), `-`)) %>% # sanity check (note to take absolute value because the direction of the calculation will differ e.g. aI - K versus t - u)
+  mutate(euc_dist = map2(spec_vector, lead(spec_vector), function(x, y) sqrt(sum((x-y) ^ 2)))) %>% 
+  as.data.frame() 
+
+# remove NA rows where measurement was made upon but not stored
+df.final <- subset(diff_df, euc_dist != '0')
+df.final$euc_dist <- as.numeric(df.final$euc_dist)
+
+# sanity check - no word*speaker*Word_duration should have more than 1 row
+df_ct <- df.final %>%
+  group_by(Speaker, match, Word, Word_duration) %>%
+  count()
+```
+
+```{r, omit words with 2+ repetitions and calculate stats on them}
+set.seed(123)
+# some children still have 3+ repetitions of individual words
+# in those case, randomly select 2 utterances
+df.final2 <- df.final %>%
+  #distinct_at(vars(Speaker, match, Word, Word_duration), .keep_all = T) %>% # get each speaker's individual word, including duplicate elicitations
+  add_count(Speaker, match, Word) 
+
+tworeps <- df.final2 %>% filter(n=='1' | n=='2')
+
+df.final3 <- df.final2 %>%
+  filter(n=='4' | n=='3') %>%
+  group_by(Speaker, match, Word) %>%
+  sample_n(2) %>% # sample two elicitations
+  rbind(., tworeps) # put back together
+
+# what % of words by hearing condition were *first* repetitions?
+reps <- df.final3 %>%
+  group_by(match) %>%
+  mutate(total_reps = n()) %>%
+  group_by(match, Repetition) %>%
+  summarize(percen_rep = (n()/total_reps)*100) %>%
+  distinct()
+```
+
+# coarticulation analysis
+
+## coartic by hearing status
+```{r, create descriptive coartic stat table}
+coartic_tbl <- df.final3 %>%
+  ungroup() %>%
+  select(poa, match, euc_dist) %>%
+  group_by(match, poa) %>%
+  summarize(mean_coartic = round(mean(euc_dist),2),
+            sd_coartic = round(sd(euc_dist),2),
+            range_coartic = paste(round(min(euc_dist),2),"-",round(max(euc_dist),2))) %>%
+  mutate(stats=paste(mean_coartic,"(",sd_coartic,")",range_coartic)) %>%
+  select(-mean_coartic, -sd_coartic, -range_coartic) %>%
+  spread("poa", "stats") %>%
+  mutate(match=recode(match, "CI"="CIs", "HA_match"="Hearing age matches", "Chrono_age_match"="Chronological age matches"))
+```
+
+```{r, acoustic-descrip}
+knitr::kable(coartic_tbl, caption = 'Mean spectral distance between C-V by hearing status and consonant', 
+             booktabs=T,
+             col.names = c("Hearing status", "[s-V]", "[SH-V]")) %>% 
+  kable_styling() %>% 
+  add_header_above(c(" " = 1, "Spectral distance" = 2))
+```
+
+We first computed coarticulation, or the Mel spectral distance between phones, by hearing status, within each target CV sequence, where a larger distance indicates less coarticulatory overlap. Descriptive statistics in Table \@ref(tab:acoustic-descrip) show differences in coarticulation by hearing status: children with CIs coarticulate more within [s-V] and [S-V] sequences than both groups of children with NH. A linear mixed effects model was fit to predict the Mel spectral distance between phones in each target CV sequence  (model summary in Table \@ref(tab:coartic-model)). The baseline model included random effects for **Word** and **Speaker**. **Word duration** was additionally added to control for the effect of speaking rate on coarticulation and **Child Chronological Age** was added to control for age-related changes in coarticulation unrelated to the other variables of interest. The effect of **Hearing Status** improved upon this model fit: children with CIs coarticulated significantly more within CV sequences than their chronological age-matched peers. They tended to coarticulate more than their hearing age matches as well (Figure \@ref(fig:vocab-by-coartic-plot)), but this effect was not significant under an alpha value of .05, suggesting that children with CIs pattern coarticulatorily closer to their hearing age matches. Neither **Place of Articulation** ([s] versus [S]) nor its interaction with **Hearing Status** improved upon model fit. 
+
+```{r, fit coartic models}
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+coartic_model_data <- df.final3 %>%
+  mutate(Word_duration = center_scale(Word_duration))
+coartic_model_data$Chrono_age_centered <- coartic_model_data$Chrono_age
+
+coartic_model_data$match <- factor(coartic_model_data$match, ordered = FALSE )
+coartic_model_data$match <- relevel(coartic_model_data$match, ref = "CI")
+baseline <- coartic_model_data %>%
+  lmer(euc_dist ~ + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+m1 <- coartic_model_data %>%
+  lmer(euc_dist ~ Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(baseline, m1) # improves
+
+m1a <- coartic_model_data %>%
+  lmer(euc_dist ~ Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(m1, m1a) # doesn't improve but we keep to control for age-related changes
+
+coartic_model_data$match <- factor(coartic_model_data$match, ordered = FALSE )
+coartic_model_data$match <- relevel(coartic_model_data$match, ref = "CI")
+m2 <- coartic_model_data %>%
+  lmer(euc_dist ~ match +
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(m1a, m2) # improves 
+
+
+m2a <- coartic_model_data %>%
+  lmer(euc_dist ~ match*Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(m2, m2a) # doesn't improve
+
+m3 <- coartic_model_data %>%
+  lmer(euc_dist ~ poa + 
+         match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(m2, m3) # doesn't improve; no effect of s~SH 
+
+m4 <- coartic_model_data %>%
+  lmer(euc_dist ~ poa*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(m2, m4) # doesn't improve; no effect of s~SH dependent on hearing status 
+
+
+```
+
+```{r, coartic-model}
+# final model; make a table 
+coartic_model_data %>%
+  lme4::lmer(euc_dist ~ match + Chrono_age_centered + Word_duration + (1|Speaker) + (1|Word), data=.) %>%
+  stargazer(., header=FALSE, 
+            dep.var.caption = "", 
+            dep.var.labels.include = FALSE,  
+            type = "latex",
+            star.cutoffs=c(0.05,0.01,0.001), 
+            star.char = c("*", "**", "***"),
+            title="Model predicting Mel spectral distance by hearing status",  
+            digits = 2, 
+            ci = TRUE, 
+            style = "all",
+            order=c(5,2,1,3,4),
+            covariate.labels = c("Intercept", "Hearing age matches", "Chronological age matches",  "Child chronological age", "Word duration"))
+
+
+```
+
+## Coarticulation by hearing age in children with CIs
+
+```{r, coartic-by-hearing-model}
+# children with CIs where we expect an effect of hearing age, but not chrono age
+ci_model_data <- df.final3 %>%
+  filter(hearing_status=='CI') %>%
+  mutate(Word_duration = center_scale(Word_duration))
+ci_model_data$Hearing_age_centered = center_scale(ci_model_data$Hearing_age)
+ci_model_data$Chrono_age_centered = center_scale(ci_model_data$Chrono_age)
+
+age_m <- ci_model_data %>%
+  lmer(euc_dist ~ Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+age_mI <- ci_model_data %>%
+  lmer(euc_dist ~ Hearing_age_centered +
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(age_m, age_mI) # significantly improves
+hearing_age_model <- summary(age_mI)
+
+age_mII <- ci_model_data %>%
+  lmer(euc_dist ~ Chrono_age_centered +
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+chrono_log_test <- anova(age_m, age_mII) # no effect
+pvalue <- chrono_log_test$`Pr(>Chisq)`[2]
+
+age_mIII <- ci_model_data %>%
+  lmer(euc_dist ~ Hearing_age_centered +
+         Word_duration + 
+         poa +
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(age_mI, age_mIII) # no effect of poa
+
+```
+
+We next evaluated the role of hearing versus chronological age upon the children with CIs' coarticulation. A linear mixed effects model, with random effects of **Word** and **Speaker** and a fixed effect of **Word duration**, was fit to predict the degree of coarticulation for the children with CIs. There was a significant effect of **Hearing Age** ($\beta$=`r round(hearing_age_model$coefficients[2],2)`, t=`r round(hearing_age_model$coefficients[2,][4],2)`, p=`r round(hearing_age_model$coefficients[2,][5],2)`), but not **Chronological Age** (model comparison with and without **Chronological age**: $\chi^2$=`r round(chrono_log_test$Chisq[2],2)`, df=1, p=`r round(pvalue,2)`), indicating that it was the children with CIs' increased *hearing* experience, and not other chronological age-related maturity such as physiological development or domain general fine motor control, that best predicted the degree of their coarticulation (Figure \@ref(fig:coartic-by-hearing-age-plot). There was again no significant effect of **Place of Articulation**.
+
+
+```{r, coartic-by-hearing-age-plot}
+# fit the model
+ci_data <- df.final3 %>% 
+  filter(hearing_status=='CI') 
+
+hearing_age_m <- ci_data %>%
+  lme4::lmer(euc_dist ~ Hearing_age + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+ci_data$fit <- predict(hearing_age_m) 
+
+ci_data %>% # TODO: note in the methods that the 7mo hearing age CI child (803E41FS1) was removed because they didn't produce any fricatives reliably  
+  mutate(Phone=poa) %>%
+  ggplot(., aes(x=Hearing_age, y=euc_dist),color=Phone, shape=Phone) + 
+  ylim(4,20) +
+  geom_jitter(size=2, alpha=.2, aes(color=Phone, shape=Phone, fill=Phone)) + 
+  geom_smooth(aes(fill=Phone, color=Phone, lty=Phone)) +
+  geom_smooth(method="lm", aes(y=fit), size=1,color="grey30") + # the actual model fit
+  xlab("Hearing age (months)") + 
+  ylab("Mel spectral \n distance between phones") + 
+  scale_x_continuous(breaks=seq(5,60,5)) +
+  theme(axis.text=element_text(size=12),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=11, face="bold"),
+      legend.position = c(.15,.85),
+       legend.background = element_rect(fill="white", 
+                                  size=0.5, linetype="solid")) +
+  guides(colour = guide_legend(override.aes = list(alpha = .55)))
+
+```
+
+## Coarticulation by vocabulary size and daily speech practice
+
+To further evaluate the role of hearing status on coarticulation, we examined the interaction of hearing status with two known predictors of child coarticulation---vocabulary size (EVT-2) and hourly child vocalization count (average number of times per hour that the child vocalized in their at-home recording)---and two novel measures that we predicted might predict coarticulation: articulation skill (GFTA-2) and minimal pair discrimination ability. Descriptive statistics of these predictors by hearing status are listed in Table \@ref(tab:descrip-tbl). For the vocabulary and articulation scores, we report growth scale values (vocabulary) and standard scores (articulation) which are transformations of raw scores that grow linearly with age.
+
+```{r, descriptive predictor stat table}
+vocab_gsv_stats <- df.final3 %>% # 76 *unique* EVT scores, but 78 total as two children are included in both HA and Chrono groups 
+  ungroup() %>%
+  distinct_at(., vars(Speaker,match), .keep_all = T) %>%
+  mutate(EVT_GSV=as.numeric(as.character(EVT_GSV))) %>%
+  select(match, EVT_GSV) %>%
+  group_by(match) %>%
+  summarize(EVT_GSV_stats=paste(round(mean(EVT_GSV, na.rm=T),2),
+                                "(",
+                                round(sd(EVT_GSV, na.rm=T),2),
+                                ")",
+                                round(min(EVT_GSV, na.rm=T),2),
+                                "-",
+                                round(max(EVT_GSV, na.rm=T),2)))
+
+vocab_standard_stats <- df.final3 %>% # 76 *unique* EVT scores, but 78 total as two children are included in both HA and Chrono groups 
+  ungroup() %>%
+  distinct_at(., vars(Speaker,match), .keep_all = T) %>%
+  mutate(EVT_Standard=as.numeric(as.character(EVT_Standard))) %>%
+  select(match, EVT_Standard) %>%
+  group_by(match) %>%
+  summarize(EVT_Standard_stats=paste(round(mean(EVT_Standard, na.rm=T),2),
+                                "(",
+                                round(sd(EVT_Standard, na.rm=T),2),
+                                ")",
+                                round(min(EVT_Standard, na.rm=T),2),
+                                "-",
+                                round(max(EVT_Standard, na.rm=T),2)))
+
+gfta_stats <- df.final3 %>% # 72 total gfta scores 
+  ungroup() %>%
+  distinct_at(., vars(Speaker,match), .keep_all = T) %>%
+  mutate(GFTA_Standard=as.numeric(GFTA_Standard)) %>%
+  select(match, GFTA_Standard) %>%
+  group_by(match) %>%
+  summarize(GFTA_stats=paste(round(mean(GFTA_Standard, na.rm=T),2),
+                                "(",
+                                round(sd(GFTA_Standard,na.rm=T),2),
+                                ")",
+                                round(min(GFTA_Standard,na.rm = T),2),
+                                "-",
+                                round(max(GFTA_Standard,na.rm = T),2)))
+
+
+minpair_stats <- df.final3 %>% # 
+  ungroup() %>%
+  filter(match!='Chrono_age_match') %>%
+  distinct_at(., vars(Speaker,match), .keep_all = T) %>%
+  select(match, MinPair_ProportionCorrect) %>%
+  group_by(match) %>%
+  summarize(minpair_stats=paste(round(mean(MinPair_ProportionCorrect, na.rm=T),2),
+                                "(",
+                                round(sd(MinPair_ProportionCorrect,na.rm=T),2),
+                                ")",
+                                round(min(MinPair_ProportionCorrect,na.rm = T),2),
+                                "-",
+                                round(max(MinPair_ProportionCorrect,na.rm = T),2))) %>%
+  rbind(., c("Chrono_age_match", "NA")) #  add an NA row for chrono kids who didn't complete this
+
+
+# get LENA data for HA matches and CI kids (don't have for chrono matches)
+new_lena_stats <- data_w_lena %>%
+  ungroup() %>%
+  filter(Speaker!='665L52FS4' & Speaker!='679L58MS6' & Speaker!='802E72FS3' & # remove children who recorded 3+ months after testing
+           Speaker!='806E42MS1'& Speaker!='809E64MS2') %>%
+  filter(match!='Chrono_age_match' & CVC_hourly!='NA') %>% # only HA and CIs
+  distinct_at(., vars(Speaker,match), .keep_all = T) %>%
+  select(match, CVC_hourly) %>%
+  group_by(match) %>%
+  summarize(CVC_stats=paste(round(mean(CVC_hourly),2),
+                            "(",
+                            round(sd(CVC_hourly),2),
+                            ")",
+                            round(min(CVC_hourly),2),
+                            "-",
+                            round(max(CVC_hourly),2))) %>%
+  rbind(., c("Chrono_age_match", "NA")) #  add an NA row for chrono kids
+
+
+
+# merge tables
+predic_tbl <- new_lena_stats %>% 
+  merge(., vocab_gsv_stats, by="match") %>%
+  merge(., vocab_standard_stats, by="match") %>%
+  merge(., gfta_stats, by="match") %>%
+  merge(., minpair_stats, by="match") %>%
+  mutate(match=recode(match, "CI"="CIs", "HA_match"="Hearing age matches", "Chrono_age_match"="Chronological age matches"))
+
+```
+
+```{r, all-task-stats-tbl}
+# write out
+knitr::kable(predic_tbl, caption = 'Task statistics by hearing status', 
+             booktabs=T,
+             col.names = c("Hearing status", "mean (SD) range", "mean (SD) range",  "mean (SD) range", "mean (SD) range", "mean (SD) range")) %>% 
+   column_spec(., column = 1:6, width = ".4in") %>%
+  kable_styling(full_width=F, 
+                latex_options = "hold_position") %>%
+  add_header_above(c(" " = 1, 
+                     "Hourly voc. count" = 1, 
+                     "EVT-2 GSVs" = 1, 
+                     "EVT-2 Standard Score" = 1, 
+                     "GFTA-2 Standard Score" = 1, 
+                     "Discrim. prop. correct" = 1))
+```
+
+
+```{r, coartic by vocab models}
+# vocab
+vocab_model_data <- df.final3 %>%
+  filter(EVT_GSV!='NA') %>% # participants 310 (CI) and 390A (chrono) didn't complete the EVT
+  mutate(Word_duration = center_scale(Word_duration))
+vocab_model_data$EVT_GSV_centered <- center_scale(vocab_model_data$EVT_GSV)
+vocab_model_data$Chrono_age_centered <- center_scale(vocab_model_data$Chrono_age) # TODO: make sure this is centered in the coartic*hearing status model
+
+# start where we left off above
+vocabI <- vocab_model_data %>%
+  lmer(euc_dist ~ match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+vocabII <- vocab_model_data %>%
+  lmer(euc_dist ~ EVT_GSV_centered + 
+         match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(vocabI, vocabII) # not sig 
+
+vocab_model_data$match <- factor(vocab_model_data$match, ordered = FALSE )
+vocab_model_data$match <- relevel(vocab_model_data$match, ref = "CI")
+vocabIII <- vocab_model_data %>%
+  lmer(euc_dist ~ EVT_GSV_centered*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(vocabII, vocabIII) #  significant 
+vocab_model <- summary(vocabIII)
+
+# sig effect of vocab for CI kids, but no effect for hearing age or chrono age matches
+
+# **** Exploratory ******
+# maybe you have to get past a certain articulatory point before vocab can predict your outcomes?
+# model the interaction of GFTA and vocab
+#ci_kids <- vocab_model_data %>% filter(match=='CI' & GFTA_Standard!='NA')
+vocab_GFTA <- vocab_model_data %>%
+  filter(match!='Chrono_age_match') %>%
+  ungroup() %>%
+  group_by(match) %>%
+  mutate(med_gfta = median(GFTA_Standard,na.rm = T)) %>% # select just the top half of CI kids and top half of HA kids, artic-wise
+  filter(GFTA_Standard!='NA') %>%
+  group_by(match) %>%
+  filter(GFTA_Standard > med_gfta) %>%
+  select(-med_gfta) %>%
+  #rbind(., ci_kids) %>% # it's not fair to include all the CI kids because there's more of them and they swamp the effect
+  lmer(euc_dist ~ EVT_GSV_centered +
+       Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) # no effect of vocab on coartic when combining just the top half of CI kids and HA kids 
+
+# maybe you have to get past a certain vocabulary size before vocab can predict your outcomes? check with NH kids
+vocab_size <- vocab_model_data %>%
+  filter(match!='CI') %>%
+  filter(Chrono_age>=41) %>% #(the mean age in Cychosz et al. 2021)
+  lmer(euc_dist ~ EVT_GSV_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+  
+# try lumping all of the NH kids together, and limit it to the range studied in Cychosz et al. 2021
+vocab_size2 <- vocab_model_data %>%
+  filter(match=='CI') %>%
+  #filter(EVT_GSV>=100) %>% # only one kid in Cychosz et al had a score lower than this
+  lmer(euc_dist ~ EVT_GSV_centered + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+```
+
+```{r, coartic-vocab-model-summary}
+# final model, make a table
+vocab_model_data %>%
+  lme4::lmer(euc_dist ~ EVT_GSV_centered*match + Chrono_age_centered + Word_duration +  (1|Speaker) + (1|Word), data=.) %>%
+  stargazer(., header=FALSE, 
+            dep.var.caption = "", 
+            dep.var.labels.include = FALSE,  
+            type = "latex",
+            star.cutoffs=c(0.05,0.01,0.001), 
+            star.char = c("*", "**", "***"),
+            title="Effect of hearing status and vocabulary on Mel spectral distance",  
+            digits = 2, 
+            ci = TRUE, 
+            style = "all",
+            order=c(8,1,2,3,4,5,6,7),
+            covariate.labels = c("Intercept", "EVT-2 score", "Chronological age matches", "Hearing age matches", "Child chronological age", "Word duration",
+                                 "EVT-2 score*Chrono age match", "EVT-2 score*Hearing age match"))
+
+
+```
+As before, we followed a forward-building model procedure to predict coarticulation within CV sequences with a baseline model containing random effects of **Speaker** and **Word** and fixed effects of **Word duration** and **Chronological Age**. As LENA recordings were only collected from the children with CIs and their hearing age matches, models with **Hourly Child Vocalization Count** only include those children. We did not find effects of **Articulation Skill** or **Minimal Pair Discrimination Ability**, or their interaction with hearing condition, upon children's coarticulation, so we excluded those variables from further analysis. For models with vocabulary size, the interaction of **Vocabulary Size** with **Hearing Status** improved upon the baseline model fit, indicating that the relationship between expressive vocabulary and coarticulation varied by hearing group (\@ref(fig:vocab-by-coartic-plot); model summary included in Appendices). There was a significant, positive relationship between expressive vocabulary and degree of coarticulation for the children with CIs (EVT-2 score: $\beta$=`r round(vocab_model$coefficients[2],2)`, t=`r round(vocab_model$coefficients[,4][2],2)`, p=`r round(vocab_model$coefficients[,5][2],2)`), but no reliably significant effects of vocabulary on coarticulation for either NH group, perhaps due to the NH groups' limited vocabulary score ranges. We elaborate upon this possibility in the Discussion.
+
+```{r, coartic by cvc models}
+# LENA
+lena_model_data <- df.final3 %>% # TODO missing one hearing age match child 
+  filter(CVC_hourly!='NA') %>% # only looking at HA matches and CIs
+  filter(Speaker!='665L52FS4' & Speaker!='679L58MS6' & Speaker!='802E72FS3' & # recorded 3+ months after testing
+           Speaker!='806E42MS1'& Speaker!='809E64MS2') %>%
+  filter(tp!='3') %>%
+  mutate(Word_duration=center_scale(Word_duration))
+lena_model_data$EVT_GSV_centered <- center_scale(lena_model_data$EVT_GSV)
+lena_model_data$CVC_hourly_centered <- center_scale(as.numeric(lena_model_data$CVC_hourly))
+lena_model_data$CTC_hourly_centered <- center_scale(as.numeric(lena_model_data$CTC_hourly))
+lena_model_data$AWC_hourly_centered <- center_scale(as.numeric(lena_model_data$AWC_hourly))
+lena_model_data$Chrono_age_centered <- center_scale(lena_model_data$Chrono_age)
+
+lenaI <- lena_model_data %>%
+  lmer(euc_dist ~ match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+lenaII <- lena_model_data %>%
+  lmer(euc_dist ~ CVC_hourly_centered +
+         Chrono_age_centered + 
+         match + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(lenaI, lenaII) # not sig 
+
+lenaIII <- lena_model_data %>%
+  lmer(euc_dist ~ CVC_hourly_centered*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(lenaI, lenaIII) # interaction doesn't improve
+
+# vocab*CVC
+lenaIV <- lena_model_data %>%
+  lmer(euc_dist ~ EVT_GSV_centered*match + 
+         Chrono_age_centered +
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+lenaV <- lena_model_data %>%
+  lmer(euc_dist ~ CVC_hourly_centered*EVT_GSV_centered*match + 
+         Chrono_age_centered +
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(lenaIV, lenaV) # neither CVC or CTC improve upon vocab-only model
+
+# no effect of vocalization count
+
+# EXPLORATORY: let's look at just the kids w/ NH
+lena_HA <- lena_model_data %>%
+  filter(match=='HA_match') %>%
+  lmer(euc_dist ~ CVC_hourly_centered + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.)  # no effect 
+
+# let's look at just the kids with CIs
+lena_CI <- lena_model_data %>% 
+  filter(match=='CI') %>%
+  lmer(euc_dist ~ CVC_hourly_centered + # exclude chrono age because correlated
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.)  # no effect
+
+# now let's look at just the kids with CIs who have 3+ years of hearing experience (median hearing age = 36 months)
+lena_CI2 <- lena_model_data %>% 
+  filter(match=='CI') %>%
+  filter(Hearing_age >35) %>%
+  lmer(euc_dist ~ CVC_hourly_centered + # exclude chrono age because correlated
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+lena_CI3 <- lena_model_data %>%
+  filter(match=='CI') %>%
+  lmer(euc_dist ~ CVC_hourly_centered*Hearing_age + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) # no effect when we code hearing age continuously 
+
+# do a model that includes all kids but with a variable that has them split
+split_model_data <- lena_model_data %>% 
+  filter(match=='CI') %>%
+  mutate(ha_group=if_else(Hearing_age > 35, "older hearing age", "younger hearing age"))
+
+split_model_data$ha_group <- factor(split_model_data$ha_group, ordered = FALSE )
+split_model_data$ha_group <- relevel(split_model_data$ha_group, ref = "older hearing age")
+
+lena_CI3a <- split_model_data %>%
+  lmer(euc_dist ~ ha_group + # exclude chrono age because correlated
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+# ***** final model *****
+lena_CI4 <- split_model_data %>%
+  lmer(euc_dist ~ CVC_hourly_centered*ha_group + # exclude chrono age because correlated
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(lena_CI3a, lena_CI4) # improves under alpha
+cvc_model <- summary(lena_CI4)
+
+
+# TODO: GFTA, perception, and vocab are not significant in models with CVC; fit models showing that those factors do not improve upon models
+# with CVC*ha_group
+```
+
+
+
+**Hourly Child Vocalization Count** from the LENA recordings did not improve upon the baseline model: there was no effect of daily speech practice upon the degree of coarticulation for children with CIs or their hearing age-matched peers. This null result was unexpected given the effect of child vocalization frequency upon coarticulatory development that we found in our previous work on four-year-olds with NH. For the children with NH in this study, we hypothesized that the null result could stem from the limited number of hearing age matches studied here or from the smaller range of hourly child vocalization frequency, a point that we return to in the Discussion. 
+
+For the children with CIs, we hypothesized that there could be another source of the null result. We considered that for children with CIs, post-implantation it may take time to learn to incorporate auditory feedback into speech routines and as such, we might not see an effect of vocal output frequency upon speech production outcomes immediately or even several months after implantation. We explored this idea by performing a median split upon the children with CIs by their hearing age (median hearing age = 36 months). We then fit the model as before but with the interaction of the binary variable **Hearing Age Group** (<>35 months hearing experience) and **Hourly Child Vocalization Count**. (Note that the models with the **Hearing Age Group** parameter did not include **Chronological Age** as the parameters not independent.) While the **Hearing Age Group*****Hourly Child Vocalization Count** interaction was not significant in the model, **Hourly Child Vocalization Count** was significant with the reference level "> 35 months hearing experience" ($\beta$=`r round(cvc_model$coefficients[2],2)`, t=`r round(cvc_model$coefficients[,4][2],2)`, p=`r round(cvc_model$coefficients[,5][2],3)`), but not significant with the reference level "<= 35 months hearing experience", indicating that the effects of vocal output upon degree of coarticulation tend to appear in the children with more than three years hearing experience, but not children with less than three years experience. 
+
+```{r, coartic by gfta models}
+# GFTA
+gfta_model_data <- df.final3 %>%
+  filter(GFTA_Standard!='NA') %>% # participants XX didn't complete GFTA
+  mutate(Word_duration = center_scale(Word_duration))
+gfta_model_data$GFTA_Standard_centered <- center_scale(gfta_model_data$GFTA_Standard)
+gfta_model_data$Chrono_age_centered <- center_scale(gfta_model_data$Chrono_age) 
+
+gftaI <- gfta_model_data %>%
+  lmer(euc_dist ~ match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+gftaII <- gfta_model_data %>%
+  lmer(euc_dist ~ GFTA_Standard_centered +
+         match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(gftaI, gftaII) # no improvement
+
+gftaIII <- gfta_model_data %>%
+  lmer(euc_dist ~ GFTA_Standard_centered*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(gftaI, gftaIII) # no improvement
+
+gftaIV <- gfta_model_data %>%
+  filter(match=='CI') %>%
+  lmer(euc_dist ~ GFTA_Standard_centered + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+# no effect of GFTA on overall coartic, no interaction with match, and no effect in models just w/ CI kids
+```
+
+```{r, coartic by minpair models}
+# min pair discrimination
+# TODO: remove the kids who completed less than a third of trials (<10)
+# note that the tp3 kids didn't do the min pair task
+minpair_model_data <- df.final3 %>%
+  filter(MinPair_ProportionCorrect!='NA') %>% # TODO: check which participants didn't complete this task
+  filter(match!='Chrono_age_match') %>% # mostly don't have data from them
+  mutate(Word_duration = center_scale(Word_duration))
+minpair_model_data$MinPair_ProportionCorrect_centered <- center_scale(minpair_model_data$MinPair_ProportionCorrect) 
+minpair_model_data$Chrono_age_centered <- center_scale(minpair_model_data$Chrono_age) 
+
+minI <- minpair_model_data %>%
+  lmer(euc_dist ~ match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+
+minII <- minpair_model_data %>%
+  lmer(euc_dist ~ MinPair_ProportionCorrect_centered +
+         match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(minI, minII)  # no improvement
+
+minIII <- minpair_model_data %>%
+  lmer(euc_dist ~ MinPair_ProportionCorrect_centered*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+anova(minI, minIII)  #  no interaction of perceptual experience with match
+
+# let's look at just the kids w/ CIs who we think there may be an effect of perceptual ability on
+minCI <- minpair_model_data %>%
+  filter(match=='CI') %>%
+  lmer(euc_dist ~ MinPair_ProportionCorrect_centered + 
+         EVT_GSV +
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+summary(minCI)
+# no effect of min discrim just in kids with CIs
+
+minIV <- minpair_model_data %>%
+  filter(match=='CI') %>%
+  lmer(euc_dist ~ MinPair_ProportionCorrect_centered*EVT_GSV + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+# no effect of discrim ability dependent upon vocab
+```
+
+```{r, vocab-by-coartic-plot}
+vocabIII <- vocab_model_data %>%
+  lmer(euc_dist ~ EVT_GSV*match + 
+         Chrono_age_centered + 
+         Word_duration + 
+         (1|Speaker) + 
+         (1|Word), 
+       data=.) 
+vocab_model_data$fit <- predict(vocabIII) 
+
+# write out the figure manually ot adjust panel size
+#jpeg("/Users/megcychosz/Google Drive/CI_feedback/analysis/results/2_feedback_results_files/figure-latex/coartic-evt-large-panels.jpeg", height = 500, width = 750)
+vocab_model_data %>%
+  #group_by(Speaker, EVT_GSV, match, poa) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(match=(recode(match,"Chrono_age_match"="Chronological \n age matches",
+                      "CI"="CIs", "HA_match"="Hearing \n age matches")),
+         Phone=poa) %>%
+  ggplot(., aes(x=EVT_GSV, y=euc_dist)) + 
+  ylim(4,20) +
+  geom_jitter(size=2, alpha=.2, aes(color=Phone, shape=Phone, fill=Phone)) + 
+  geom_smooth(aes(fill=Phone, color=Phone, lty=Phone)) +
+  geom_smooth(method="lm", aes(y=fit), size=1,color="grey30") + # the actual model fit  
+  facet_wrap(~match, scales="free") +
+
+  xlab("Expressive vocabulary score (EVT-2)") + 
+  ylab("Mel spectral \n distance between phones") + 
+  #labs(col='Place of articulation') + 
+  theme(axis.text=element_text(size=15),
+      axis.title=element_text(size=20,face="bold"),
+      legend.title = element_text(size=12, face="bold"), 
+      legend.text = element_text(size=11),
+      strip.text.x = element_text(size=13),
+      legend.position = c(.43,.87),
+      legend.background = element_rect(fill="white", 
+                                       size=0.5, linetype="solid")) +
+  guides(colour = guide_legend(override.aes = list(alpha = .55)))
+#dev.off()
+```
+
+# not using
+
+```{r, med split vocab by coartic plot}
+# split the CI kids on their vocab scores
+med_evt <- df.final3 %>%
+  filter(EVT_GSV!='NA') %>%
+  filter(match=='CI') %>%
+  #group_by(match) %>%
+  ungroup() %>%
+  summarize(med_evt=median(as.numeric(EVT_GSV)))
+
+# CIS
+CI_evt<- df.final3 %>%
+  filter(hearing_status=='CI') %>%
+  filter(EVT_GSV!='NA') %>%
+  mutate(vocab_group = if_else(EVT_GSV < 127, 
+                            "Small vocab", 
+                            "Large vocab"))
+
+ CI_evt %>%
+  #group_by(Speaker, CVC_hourly, feedback_experience, match, poa) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=MinPair_ProportionCorrect, y=euc_dist)) + 
+  ylim(5,16) + 
+  #geom_boxplot(aes()) + 
+  geom_smooth(method="lm") + 
+   geom_jitter() +
+  facet_wrap(~vocab_group) +
+  xlab("Discrimination ability") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+```
+
+```{r, lena by coartic plot}
+#665L52FS4 completed recording 6 months later 679L58MS6 completed recording 4 months alter
+#802E72FS3 did it 4 months later; 806E42MS1 did it 3 months later
+#809E64MS2 did LENA recording 4 months later
+
+lena_model_data %>%
+  filter(match!='Chrono_age_match') %>%
+   #group_by(Speaker, poa) %>% # don't need to group by match bc only ha matches
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  #merge(., df.final3, by=c("Speaker", "poa")) %>%
+  distinct_at(., vars(Speaker, poa), .keep_all = T) %>%
+  #mutate(match=(recode(match,"CI"="CIs", "HA_match"="Hearing age matches")),
+   #      Phone=poa,
+    #     CVC_hourly=as.numeric(CVC_hourly)) %>%
+  ggplot(., aes(x=CVC_hourly, y=euc_dist)) + 
+  ylim(5,16) + # TODO add a note saying that one outlier was removed
+  geom_jitter(size=2, alpha=.9, aes(color=poa, shape=poa)) + 
+  geom_smooth(method='lm', color='gray40') +
+  facet_wrap(~match) +
+  xlab("CVC") + 
+  ylab("Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+
+# perform a median split by CVC which is a proxy for auditory feedback experience and see if there is an effect on coartic
+med_CVC <- df.final3 %>%
+  filter(CVC_hourly!='NA') %>%
+  group_by(match) %>%
+  summarize(med_CVC=median(as.numeric(CVC_hourly)))
+
+# CIS
+CI_auditory <- df.final3 %>%
+  filter(hearing_status=='CI') %>%
+  filter(CVC_hourly!='NA') %>%
+  mutate(feedback_experience = if_else(CVC_hourly < 256, 
+                            "Less auditory \n feedback group", 
+                            "More auditory \n feedback group"))
+# hearing age matches
+HA_auditory <- df.final3 %>%
+  filter(match=='HA_match') %>%
+  filter(CVC_hourly!='NA') %>%
+  mutate(feedback_experience = if_else(CVC_hourly < 245, 
+                            "Less auditory \n feedback group", 
+                            "More auditory \n feedback group")) %>%
+  rbind(., CI_auditory)
+
+
+ HA_auditory %>%
+  #group_by(Speaker, CVC_hourly, feedback_experience, match, poa) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(match=(recode(match,"CI"="CIs", "HA_match"="Hearing age matches")),
+         Phone=poa,
+         CVC_hourly=as.numeric(CVC_hourly)) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=Hearing_age, y=euc_dist)) + 
+  ylim(5,16) + # TODO add a note saying that one outlier was removed
+  geom_boxplot(aes()) + 
+  #geom_jitter() +
+  facet_wrap(~match) +
+  xlab("Feedback experience") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+```
+
+```{r, gfta by coartic plot}
+ gfta_model_data %>%
+   ungroup() %>%
+   #distinct(Speaker, .keep_all = T) %>%
+  #group_by(Speaker, match, poa, MinPair_ProportionCorrect) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=GFTA_Standard, y=euc_dist)) + 
+  #ylim(5,16) + 
+  #geom_boxplot(aes()) + 
+  geom_smooth(method="lm") + 
+   geom_jitter(size=1, alpha=.5) +
+  facet_wrap(~match) +
+  xlab("GFTA score") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+```
+
+```{r, gfta by coartic plot: split}
+# split the CI kids on their GFTA scores
+# absolutely no coartic difference based on GFTA scores
+med_gfta <- df.final3 %>%
+  filter(GFTA_Standard!='NA') %>%
+  filter(match=='CI') %>%
+  #group_by(match) %>%
+  ungroup() %>%
+  summarize(med_gfta=median(as.numeric(GFTA_Standard)))
+
+# CIS
+CI_gfta<- df.final3 %>%
+  filter(hearing_status=='CI') %>%
+  filter(GFTA_Standard!='NA') %>%
+  mutate(gfta_group = if_else(GFTA_Standard < 72, 
+                            "Bad artic", 
+                            "Good artic"))
+
+ CI_gfta %>%
+  #group_by(Speaker, CVC_hourly, feedback_experience, match, poa) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=gfta_group, y=euc_dist)) + 
+  ylim(5,16) + 
+  geom_boxplot(aes()) + 
+  #geom_jitter() +
+  #facet_wrap(~match) +
+  xlab("GFTA group") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+
+
+```
+
+```{r, minpair by coartic plot}
+ minpair_model_data %>%
+   ungroup() %>%
+  filter(match!='Chrono_age_match') %>% # no data from this group
+   #distinct(Speaker, .keep_all = T) %>%
+  #group_by(Speaker, match, poa, MinPair_ProportionCorrect) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=MinPair_ProportionCorrect, y=euc_dist)) + 
+  #ylim(5,16) + 
+  #geom_boxplot(aes()) + 
+  geom_smooth(aes(color=Phone),method="lm") + 
+   geom_jitter(aes(color=Phone),size=1, alpha=.5) +
+  facet_wrap(~match) +
+  xlab("Proportion correct on minimal \n pair discrimination task") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+
+```
+
+```{r, minpair by coartic plot: split}
+# split the CI kids on their minpair discrim scores
+med_min_pair <- df.final3 %>%
+  filter(MinPair_ProportionCorrect!='NA') %>%
+  filter(match=='CI') %>%
+  filter(Speaker!='304E48FS2') %>% # this kid listened to less than 10 trials
+  #group_by(match) %>%
+  ungroup() %>%
+  summarize(med_min_pair=median(as.numeric(MinPair_ProportionCorrect)))
+
+# CIS
+CI_min_pair<- df.final3 %>%
+  filter(hearing_status=='CI') %>%
+  filter(MinPair_ProportionCorrect!='NA') %>%
+  mutate(min_pair_group = if_else(MinPair_ProportionCorrect < .667, 
+                            "Low discrim", 
+                            "High discrim"))
+
+ CI_min_pair %>%
+   ungroup() %>%
+   distinct(Speaker, .keep_all = T) %>%
+  #group_by(Speaker, match, poa, MinPair_ProportionCorrect) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=MinPair_ProportionCorrect, y=euc_dist)) + 
+  #ylim(5,16) + 
+  #geom_boxplot(aes()) + 
+  geom_smooth(method="lm") + 
+   geom_jitter() +
+  facet_wrap(~min_pair_group) +
+  xlab("Discrim ability") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+```
+
+```{r, lena by coartic plot: split}
+med_ha <- lena_model_data %>%
+  filter(match=='CI') %>%
+  #group_by(match) %>%
+  ungroup() %>%
+  summarize(med_ha=median(as.numeric(Hearing_age)))
+
+# CIS
+CI_ha <- lena_model_data %>%
+  filter(hearing_status=='CI') %>%
+  mutate(ha_group = if_else(Hearing_age < 36, 
+                            "Little experience", 
+                            "More experience"))
+
+CI_ha %>%
+  group_by(Speaker, CVC_hourly, ha_group, poa) %>%
+ # summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(Phone=poa) %>%
+  #filter(match=='CIs') %>%
+  ggplot(., aes(x=CVC_hourly, y=euc_dist)) + 
+  ylim(5,16) + 
+  #geom_boxplot(aes()) + 
+  geom_smooth(method="lm") +
+  geom_jitter(aes(shape=Phone,color=Phone)) +
+  facet_wrap(~ha_group) +
+  xlab("CVC") + 
+  ylab("Median Mel spectral \n distance between phones") + 
+  theme(axis.text=element_text(size=10),
+      axis.title=element_text(size=17,face="bold"),
+      legend.title = element_text(size=15),
+      strip.text.x = element_text(size=10)) 
+```
+
+```{r, individual vocab by coartic plot}
+vocab_model_data %>%
+  #group_by(Speaker, EVT_GSV, match, poa) %>%
+  #summarize(median_euc_dist = median(euc_dist)) %>%
+  mutate(match=(recode(match,"Chrono_age_match"="Chronological \n age matches",
+                      "CI"="CIs", "HA_match"="Hearing \n age matches")),
+         Phone=poa) %>%
+  filter(match!='CIs') %>%
+  mutate(med_euc_dist = median(euc_dist)) %>%
+  distinct(Speaker, .keep_all = T) %>%
+  filter(EVT_GSV>100) %>%
+  ggplot(., aes(x=EVT_GSV, y=euc_dist)) + 
+  ylim(4,20) +
+  geom_point(size=1.2, alpha=.8, aes(color=Phone, shape=Phone, fill=Phone)) + 
+  #facet_wrap(~Speaker, scales="free") +
+  geom_smooth(aes(fill=Phone),method='lm') +
+
+  xlab("Expressive vocabulary score (EVT-2)") + 
+  ylab("Mel spectral \n distance between phones") #+ 
+  #labs(col='Place of articulation') + 
+  theme(axis.text=element_text(size=15),
+      axis.title=element_text(size=20,face="bold"),
+      legend.title = element_text(size=12, face="bold"), 
+      legend.text = element_text(size=11),
+      strip.text.x = element_text(size=13),
+      legend.position = c(.43,.87),
+      legend.background = element_rect(fill="white", 
+                                       size=0.5, linetype="solid")) +
+  guides(colour = guide_legend(override.aes = list(alpha = .55)))
+
+```
+
+
+
+```{r, real coartic plots}
+  #mutate(environment=paste(poa,backness)) %>%
+  #mutate(environment=recode(environment, "alveolar back"="su", "alveolar front" = "si", "postalveolar back" = "SHu", "postalveolar front" = "SHi")) #%>%
+ # filter(Word=='scissors' | Word=='sheep' | Word=='ship' | Word=='shell' | Word=='shoe' | Word=='shoulder' | Word=='shovel' | Word=='sink' | Word=='sick' | Word=='sister' | Word=='soap' | Word=='soup' | Word=='suitcase')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
