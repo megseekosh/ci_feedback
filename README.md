@@ -13,11 +13,7 @@ Code to replicate results in "Auditory feedback experience in phonetic developme
 
 `3_appendices.Rmd` - code to replicate appendices
 
-## Manuscript
-
-`CI_feedback_R1.pdf` - most recent submitted manuscript
-
 ## Citation
 
-Cychosz, M. Munson, B., Newman, R., & Edwards, J. (under review). Auditory feedback experience in the development of phonetic production: Evidence from preschoolers with cochlear implants and their normal-hearing peers. [pre-print](https://psyarxiv.com/ek7zs/)
+Cychosz, M. Munson, B., Newman, R., & Edwards, J. (2021). Auditory feedback experience in the development of phonetic production: Evidence from preschoolers with cochlear implants and their normal-hearing peers. *Journal of the Acoustical Society of America, 150,*(3), 2256-2271.
 
