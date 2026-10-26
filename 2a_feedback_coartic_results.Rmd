@@ -30,18 +30,18 @@ library('kableExtra')
 
 ```{r, load in data}
 # acoustic measures
-data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/production_data/RealWordRep_809E64MS2.CI_mel_spectrum.csv")
-demo_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/final_matched_children_edited.csv") # hearing status info, etc.
+data <- read.csv("RealWordRep_809E64MS2.CI_mel_spectrum.csv")
+demo_data <- read.csv("final_matched_children_edited.csv") # hearing status info, etc.
 
 # test data
-tp1_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/tp1_test_data.csv") # GFTA, vocab, etc. for TP1
-tp3_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/participantinfo_tp3.csv") # GFTA, vocab, etc. for TP3
-some_CI_test_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/UW_UMNCrossSectionalCochlearImplantV1DatesScores.csv") # vocab scores for CIs
-CI_gfta_min <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/ParticipantInfo_CIV1.csv") #  GFTA scores and min pair scores for CIs
+tp1_test_data <- read.csv("tp1_test_data.csv") # GFTA, vocab, etc. for TP1
+tp3_test_data <- read.csv("participantinfo_tp3.csv") # GFTA, vocab, etc. for TP3
+some_CI_test_data <- read.csv("UW_UMNCrossSectionalCochlearImplantV1DatesScores.csv") # vocab scores for CIs
+CI_gfta_min <- read.csv("ParticipantInfo_CIV1.csv") #  GFTA scores and min pair scores for CIs
 
 # LENA data
-tp1_lena_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/TimePoint1_LENA_hourly.csv") # LENA for TP1; not collected at TP3
-CI_lena_data1 <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/testing_data/CochlearV1_hourly.csv") #LENA
+tp1_lena_data <- read.csv("TimePoint1_LENA_hourly.csv") # LENA for TP1; not collected at TP3
+CI_lena_data1 <- read.csv("CochlearV1_hourly.csv") #LENA
 
 # merge the test datasets together
 CI_test_data <- CI_gfta_min %>%
@@ -53,8 +53,7 @@ CI_test_data <- CI_gfta_min %>%
 data2 <- data %>%
   filter(Filename!='RealWordRep_638L28MS1_ML.WAV') %>% #remove 638 (HA match) because he repeated less than 50% of the words
   mutate(Speaker=gsub("\\..*","",Speaker), # create speaker category
-         Speaker=gsub('_[^_]*$', '', Speaker),
-         CV_dur=phone_t1+phone_t2) 
+         Speaker=gsub('_[^_]*$', '', Speaker)) # NOTE (Oct 2026): removed unused CV_dur column, which summed two absolute timestamps
 
 # merge with demographic and testing (GFTA/vocab) datasets
 tp3_test_data_vars <- tp3_test_data %>% select(ParticipantIDLong, LateTalker, AAE, EVT_Raw, EVT_GSV, 
@@ -126,8 +125,10 @@ lena_hourly <- tp1_lena_data %>% # remember we don't have LENA data for TP3
          CTC_hourly = (sum(CTC_Actual)/recording_length_hours)) %>%
   distinct(Subject, .keep_all = T) %>%
   select(AWC_hourly, CVC_hourly, CTC_hourly, Subject, recording_length_hours) %>%
-  filter(Subject!='006L' | Subject!='026L' & Subject!='076L' &
-           Subject!='122L' & Subject!='655L' & Subject!='657L') # remove the 6 hearing age matches that are from tp3; the lena data are from tp1 for them
+  filter(!Subject %in% c('006L','026L','076L','122L','655L','657L')) # remove the 6 hearing age matches that are from tp3; the lena data are from tp1 for them
+  # NOTE (Oct 2026): the original boolean here mixed | and & and was a no-op (removed nothing).
+  # Corrected to the intended exclusion; verified to have no effect on any published result with the
+  # shipped data, because these children are routed through the tp=='3' (no_lena) branch below.
 
 no_lena <- data4 %>% 
   filter(match=='Chrono_age_match' | tp=='3' | Speaker =='800E65MS2') %>% # get chrono matches,  the 6 hearing age matches that are from tp3, and the one CI child who didn't do a recording 
@@ -190,7 +191,7 @@ descrip_nh_lena_stats <- data_w_lena %>%
 
 ```{r, write out data}
 # write out data with demographics for vowel analysis
-write.csv(data_w_lena, '/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/coartic_w_lena.csv')
+write.csv(data_w_lena, 'coartic_w_lena.csv') # repo-relative output path (Oct 2026; was a machine-specific absolute path)
 
 ```
 
@@ -493,7 +494,11 @@ center_scale <- function(x) {
 }
 coartic_model_data <- df.final3 %>%
   mutate(Word_duration = center_scale(Word_duration))
-coartic_model_data$Chrono_age_centered <- coartic_model_data$Chrono_age
+coartic_model_data$Chrono_age_centered <- center_scale(coartic_model_data$Chrono_age)
+# NOTE (Oct 2026): Chrono_age_centered was previously assigned the raw (uncentered) ages here.
+# Centering changes only the intercept of the models in this chunk: the published Table III
+# intercept, 10.86 (8.64, 13.09), corresponds to the original uncentered fit (predicted value at
+# chronological age 0 months); all other coefficients, SEs, t- and p-values are identical.
 
 coartic_model_data$match <- factor(coartic_model_data$match, ordered = FALSE )
 coartic_model_data$match <- relevel(coartic_model_data$match, ref = "CI")

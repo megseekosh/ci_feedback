@@ -24,7 +24,7 @@ library('knitr')
 ```
 
 ```{r}
-demo_data <- read.csv("/Users/megcychosz/Google Drive/CI_feedback/data/match_participants/final_matched_children_edited.csv") # hearing status info, etc.
+demo_data <- read.csv("final_matched_children_edited.csv") # hearing status info, etc.
 ```
 
 ```{r}

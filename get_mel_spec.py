@@ -43,6 +43,7 @@ t2list = []
 durlist = []
 worddurlist = []
 normlist = []
+repetitionlist = []
 
 
 
@@ -69,8 +70,8 @@ def processwav(wav, tg): # wav = path to the wav file in dir
 
 		def get_spectrum(S,t1,t2,step_size=step_size, plot=False,label='c'):
 
-			start_frame = np.int(t1/step_size)
-			end_frame = np.int(t2/step_size)
+			start_frame = int(t1/step_size)
+			end_frame = int(t2/step_size)
 
 			mean_mel_spectrum = np.mean(np.log(S[:,start_frame:end_frame]),axis=1)
 
@@ -141,7 +142,7 @@ n_fft = 2048 # # of FFT coefficients to compute
 n_mels = 29  # # of Mel filter bands
 
 # compute the mel frequency filter bank
-mel_f = librosa.filters.mel(sr, n_fft=2048, n_mels=29, fmin=100.0, fmax=6000, htk=True, norm=1)
+mel_f = librosa.filters.mel(sr=sr, n_fft=2048, n_mels=29, fmin=100.0, fmax=6000, htk=True, norm=1)
 
 for wav, tg in filelist: 
       print(wav) # sanity check
